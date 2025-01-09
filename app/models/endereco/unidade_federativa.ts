@@ -3,6 +3,7 @@ import { DateTime } from 'luxon'
 import { randomUUID } from 'node:crypto'
 
 export default class UnidadeFederativa extends BaseModel {
+  static table = 'unidades_federativas'
   static selfAssignPrimaryKey = true
 
   @column({ isPrimary: true })

@@ -3,6 +3,7 @@ import { DateTime } from 'luxon'
 import { randomUUID } from 'node:crypto'
 
 export default class Endereco extends BaseModel {
+  static table = 'endereco'
   static selfAssignPrimaryKey = true
 
   @column({ isPrimary: true })

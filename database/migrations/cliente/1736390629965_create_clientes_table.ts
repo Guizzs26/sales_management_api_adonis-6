@@ -29,8 +29,8 @@ export default class extends BaseSchema {
   }
 
   async down() {
-    this.schema.raw('DROP EXTENSION IF EXISTS "uuid-ossp"')
-    this.schema.raw('DROP TYPE IF EXISTS "cliente_tipo"')
     this.schema.dropTable(this.tableName)
+    this.schema.raw('DROP TYPE IF EXISTS "cliente_tipo"')
+    this.schema.raw('DROP EXTENSION IF EXISTS "uuid-ossp"')
   }
 }

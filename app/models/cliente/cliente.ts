@@ -3,6 +3,7 @@ import { DateTime } from 'luxon'
 import { randomUUID } from 'node:crypto'
 
 export default class Cliente extends BaseModel {
+  static table = 'cliente'
   static selfAssignPrimaryKey = true
 
   @column({ isPrimary: true })
