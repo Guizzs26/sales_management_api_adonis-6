@@ -1,9 +1,12 @@
-import { BaseModel, beforeCreate, column } from '@adonisjs/lucid/orm'
+import Endereco from '#models/endereco/endereco'
+import { BaseModel, beforeCreate, column, hasMany } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 import { randomUUID } from 'node:crypto'
+import type { HasMany } from '@adonisjs/lucid/types/relations'
+
+export type TipoPessoa = 'PF' | 'PJ'
 
 export default class Cliente extends BaseModel {
-  static table = 'cliente'
   static selfAssignPrimaryKey = true
 
   @column({ isPrimary: true })
@@ -25,10 +28,10 @@ export default class Cliente extends BaseModel {
   declare data_nascimento_fundacao: DateTime
 
   @column()
-  declare tipo: 'PF' | 'PJ'
+  declare tipo: TipoPessoa
 
-  @column()
-  declare endereco_id: string
+  @hasMany(() => Endereco)
+  declare enderecos: HasMany<typeof Endereco>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
