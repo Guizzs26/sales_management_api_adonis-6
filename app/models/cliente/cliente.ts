@@ -1,10 +1,10 @@
-import Endereco from '#models/endereco/endereco'
 import { BaseModel, beforeCreate, column, hasMany } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 import { randomUUID } from 'node:crypto'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
+import Endereco from '../endereco/endereco.js'
 
-export type TipoPessoa = 'PF' | 'PJ'
+export type TipoPessoa = 'PF' | ' PJ'
 
 export default class Cliente extends BaseModel {
   static selfAssignPrimaryKey = true
@@ -13,10 +13,10 @@ export default class Cliente extends BaseModel {
   declare id: string
 
   @column()
-  declare nome_completo: string
+  declare nomeCompleto: string
 
   @column()
-  declare cpf_cnpj: string
+  declare cpfCnpj: string
 
   @column()
   declare email: string
@@ -25,7 +25,7 @@ export default class Cliente extends BaseModel {
   declare telefone: string | null
 
   @column.date()
-  declare data_nascimento_fundacao: DateTime
+  declare dataNascimentoFundacao: DateTime
 
   @column()
   declare tipo: TipoPessoa

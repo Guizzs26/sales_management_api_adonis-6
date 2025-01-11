@@ -1,9 +1,9 @@
-import Cliente from '#models/cliente/cliente'
-import UnidadeFederativa from '#models/endereco/unidade_federativa'
 import { BaseModel, beforeCreate, belongsTo, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 import { randomUUID } from 'node:crypto'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import Cliente from '../cliente/cliente.js'
+import UnidadeFederativa from './unidade_federativa.js'
 
 export default class Endereco extends BaseModel {
   static selfAssignPrimaryKey = true
@@ -30,7 +30,7 @@ export default class Endereco extends BaseModel {
   declare complemento: string | null
 
   @column()
-  declare uf_id: number
+  declare ufId: number
 
   @column()
   declare clienteId: number
