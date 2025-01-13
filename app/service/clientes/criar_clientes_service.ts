@@ -8,7 +8,7 @@ type ClienteData = {
   telefone: string | null
   dataNascimentoFundacao: DateTime
   tipo: TipoPessoa
-  endereco: EnderecoData
+  endereco: EnderecoData[]
 }
 
 type EnderecoData = {
@@ -18,6 +18,7 @@ type EnderecoData = {
   bairro: string
   numero: string
   complemento: string | null
+  ufId: string
 }
 
 export class CriarClienteService {
@@ -32,5 +33,10 @@ export class CriarClienteService {
       dataNascimentoFundacao,
       tipo,
     })
+
+    await cliente.related('enderecos').createMany(endereco)
+    await cliente.load('enderecos')
+
+    return cliente
   }
 }

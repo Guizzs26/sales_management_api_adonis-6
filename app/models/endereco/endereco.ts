@@ -30,7 +30,7 @@ export default class Endereco extends BaseModel {
   declare complemento: string | null
 
   @column()
-  declare ufId: number
+  declare ufId: string
 
   @column()
   declare clienteId: number
