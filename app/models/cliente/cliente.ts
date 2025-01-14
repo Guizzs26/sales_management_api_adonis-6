@@ -2,9 +2,8 @@ import { BaseModel, beforeCreate, column, hasMany } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 import { randomUUID } from 'node:crypto'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
+import type { TipoPessoa } from '../../../types/cliente/cliente_type.js'
 import Endereco from '../endereco/endereco.js'
-
-export type TipoPessoa = 'PF' | ' PJ'
 
 export default class Cliente extends BaseModel {
   static selfAssignPrimaryKey = true

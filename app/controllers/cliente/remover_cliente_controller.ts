@@ -1,6 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import RemoverClienteService from '#services/clientes/remover_cliente_service'
+import RemoverClienteService from '#services/cliente/remover_cliente_service'
 
 @inject()
 export default class RemoverClienteController {

@@ -1,9 +1,9 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { AtualizarClienteService } from '#services/clientes/atualizar_cliente_service'
+import AtualizarClienteService from '#services/cliente/atualizar_cliente_service'
 
 @inject()
-export default class AtualizarClientesController {
+export default class AtualizarClienteController {
   constructor(private atualizarClienteService: AtualizarClienteService) {}
 
   async handle({ request, response, params }: HttpContext): Promise<void> {

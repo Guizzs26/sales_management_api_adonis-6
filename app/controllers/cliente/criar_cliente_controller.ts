@@ -1,16 +1,16 @@
-import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
-import CriarClienteService from '../../services/clientes/criar_clientes_service.js'
+import { inject } from '@adonisjs/core'
+import CriarClienteService from '../../services/cliente/criar_cliente_service.js'
 
 @inject()
-export default class CriarClientesController {
+export default class CriarClienteController {
   constructor(private criarClienteService: CriarClienteService) {}
 
   public async handle({ request, response }: HttpContext): Promise<void> {
     const { nomeCompleto, cpfCnpj, email, telefone, dataNascimentoFundacao, tipo, endereco } =
       request.body()
 
-    const cliente = await this.criarClienteService.execute({
+    const novoCliente = await this.criarClienteService.execute({
       nomeCompleto,
       cpfCnpj,
       email,
@@ -21,8 +21,7 @@ export default class CriarClientesController {
     })
 
     return response.status(201).send({
-      message: 'Cliente criado com sucesso!',
-      data: cliente,
+      data: novoCliente,
     })
   }
 }

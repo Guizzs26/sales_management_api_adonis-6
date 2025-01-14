@@ -1,15 +1,10 @@
 import Cliente from '#models/cliente/cliente'
+import { AtualizarClientePayload } from '../../../types/cliente/cliente_type.js'
 
-type AtualizarClienteData = {
-  nomeCompleto?: string
-  email?: string
-  telefone?: string
-}
-
-export class AtualizarClienteService {
+export default class AtualizarClienteService {
   async execute(
     id: string,
-    { nomeCompleto, email, telefone }: AtualizarClienteData
+    { nomeCompleto, email, telefone }: AtualizarClientePayload
   ): Promise<Cliente> {
     const cliente = await Cliente.findOrFail(id)
 

@@ -1,9 +1,9 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import BuscarClienteService from '#services/clientes/buscar_cliente_service'
+import BuscarClienteService from '#services/cliente/buscar_cliente_service'
 
 @inject()
-export default class BuscarClientesController {
+export default class BuscarClienteController {
   constructor(private buscarClienteService: BuscarClienteService) {}
 
   async handle({ params, response }: HttpContext): Promise<void> {

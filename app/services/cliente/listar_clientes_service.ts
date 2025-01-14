@@ -1,21 +1,7 @@
 import Cliente from '#models/cliente/cliente'
+import { RespostaPaginada } from '../../../types/cliente/cliente_type.js'
 
-export type RespostaPaginada<T> = {
-  meta: {
-    total: number
-    perPage: number
-    currentPage: number
-    lastPage: number
-    firstPage: number
-    firstPageUrl: string
-    lastPageUrl: string
-    nextPageUrl: string | null
-    previousPageUrl: string | null
-  }
-  data: T[]
-}
-
-const LIMITE_MAXIMO = 100
+const LIMITE_MAXIMO = 50
 
 export default class ListarClientesService {
   async execute(page: number, limit: number): Promise<RespostaPaginada<Cliente>> {
@@ -23,7 +9,10 @@ export default class ListarClientesService {
       limit = LIMITE_MAXIMO
     }
 
-    const clientes = await Cliente.query().orderBy('nomeCompleto', 'asc').paginate(page, limit)
+    const clientes = await Cliente.query()
+      .preload('enderecos')
+      .orderBy('created_at', 'asc')
+      .paginate(page, limit)
 
     clientes.namingStrategy = {
       paginationMetaKeys() {
