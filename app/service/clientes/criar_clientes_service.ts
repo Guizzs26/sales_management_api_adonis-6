@@ -22,7 +22,7 @@ type EnderecoData = {
   ufId: string
 }
 
-export class CriarClienteService {
+export default class CriarClienteService {
   public async execute({
     nomeCompleto,
     cpfCnpj,
