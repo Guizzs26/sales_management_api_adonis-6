@@ -1,3 +1,4 @@
+import db from '@adonisjs/lucid/services/db'
 import Cliente, { TipoPessoa } from '../../models/cliente/cliente.js'
 import { DateTime } from 'luxon'
 
@@ -22,19 +23,29 @@ type EnderecoData = {
 }
 
 export class CriarClienteService {
-  public async execute(data: ClienteData): Promise<Cliente> {
-    const { nomeCompleto, cpfCnpj, email, telefone, dataNascimentoFundacao, tipo, endereco } = data
+  public async execute({
+    nomeCompleto,
+    cpfCnpj,
+    email,
+    telefone,
+    dataNascimentoFundacao,
+    tipo,
+    endereco,
+  }: ClienteData): Promise<Cliente> {
+    const cliente = await db.transaction(async (trx) => {
+      const novoCliente = new Cliente()
 
-    const cliente = await Cliente.create({
-      nomeCompleto,
-      cpfCnpj,
-      email,
-      telefone,
-      dataNascimentoFundacao,
-      tipo,
+      novoCliente.merge({ nomeCompleto, cpfCnpj, email, telefone, dataNascimentoFundacao, tipo })
+      novoCliente.useTransaction(trx)
+
+      await novoCliente.save()
+
+      await novoCliente.related('enderecos').createMany(endereco)
+
+      return novoCliente
     })
 
-    await cliente.related('enderecos').createMany(endereco)
+    // lazy loading
     await cliente.load('enderecos')
 
     return cliente

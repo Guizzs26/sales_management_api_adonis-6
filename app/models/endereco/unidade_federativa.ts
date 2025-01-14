@@ -6,6 +6,7 @@ import Endereco from './endereco.js'
 
 export default class UnidadeFederativa extends BaseModel {
   static selfAssignPrimaryKey = true
+  static table = 'unidades_federativas'
 
   @column({ isPrimary: true })
   declare id: string
