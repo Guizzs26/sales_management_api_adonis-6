@@ -45,7 +45,7 @@ export default class CriarClienteService {
       return novoCliente
     })
 
-    // lazy loading
+    // lazy loading fora da transaction p/ evitar possível deadlock
     await cliente.load('enderecos')
 
     return cliente
