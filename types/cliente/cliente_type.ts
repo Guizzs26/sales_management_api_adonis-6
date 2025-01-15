@@ -1,6 +1,9 @@
 import { DateTime } from 'luxon'
 
-export type TipoPessoa = 'PF' | ' PJ'
+export enum TipoPessoa {
+  PF = 'PF',
+  PJ = 'PJ',
+}
 
 export type CriarClientePayload = {
   nomeCompleto: string
@@ -9,7 +12,7 @@ export type CriarClientePayload = {
   telefone: string | null
   dataNascimentoFundacao: DateTime
   tipo: TipoPessoa
-  endereco: EnderecoPayload[]
+  enderecos: EnderecoPayload[]
 }
 
 export type EnderecoPayload = {

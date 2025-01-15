@@ -10,7 +10,7 @@ export default class CriarClienteService {
     telefone,
     dataNascimentoFundacao,
     tipo,
-    endereco,
+    enderecos,
   }: CriarClientePayload): Promise<Cliente> {
     const novoCliente = await db.transaction(async (trx) => {
       const cliente = new Cliente()
@@ -20,7 +20,7 @@ export default class CriarClienteService {
 
       await cliente.save()
 
-      await cliente.related('enderecos').createMany(endereco)
+      await cliente.related('enderecos').createMany(enderecos)
 
       return cliente
     })
