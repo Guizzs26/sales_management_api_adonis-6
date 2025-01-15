@@ -6,10 +6,9 @@ export default class extends BaseSchema {
   async up() {
     this.schema.alterTable(this.tableName, (table) => {
       table
-        .uuid('uf_id')
-        .unsigned()
+        .string('sigla_uf')
         .notNullable()
-        .references('id')
+        .references('sigla_uf')
         .inTable('unidades_federativas')
         .onDelete('RESTRICT')
     })
@@ -17,7 +16,7 @@ export default class extends BaseSchema {
 
   async down() {
     this.schema.alterTable(this.tableName, (table) => {
-      table.dropColumn('uf_id')
+      table.dropColumn('sigla_uf')
     })
   }
 }

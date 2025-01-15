@@ -9,7 +9,7 @@ export type CriarClientePayload = {
   nomeCompleto: string
   cpfCnpj: string
   email: string
-  telefone: string | null
+  telefone?: string | null
   dataNascimentoFundacao: DateTime
   tipo: TipoPessoa
   enderecos: EnderecoPayload[]
@@ -21,8 +21,8 @@ export type EnderecoPayload = {
   logradouro: string
   bairro: string
   numero: string
-  complemento: string | null
-  ufId: string
+  complemento?: string | null
+  siglaUf: string
 }
 
 export type PaginationMetadata = {

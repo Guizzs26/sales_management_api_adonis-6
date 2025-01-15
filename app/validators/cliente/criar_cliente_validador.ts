@@ -74,7 +74,7 @@ export const criarClienteSchema = vine
     // Ok
     tipo: vine.enum(TipoPessoa),
 
-    // Enderecos tambem não vai ficar assim, apenas para teste
+    // Enderecos também não vai ficar assim, apenas para teste
     enderecos: vine.array(
       vine.object({
         cep: vine
@@ -93,7 +93,7 @@ export const criarClienteSchema = vine
         localidade: vine.string(),
         numero: vine.string().minLength(1).maxLength(20),
         complemento: vine.string().minLength(1).maxLength(127).optional(),
-        ufId: vine.string(),
+        siglaUf: vine.string(),
       })
     ),
   })

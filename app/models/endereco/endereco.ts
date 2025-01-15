@@ -7,6 +7,7 @@ import UnidadeFederativa from './unidade_federativa.js'
 
 export default class Endereco extends BaseModel {
   static selfAssignPrimaryKey = true
+  static table = 'enderecos'
 
   @column({ isPrimary: true })
   declare id: string
@@ -27,10 +28,10 @@ export default class Endereco extends BaseModel {
   declare numero: string
 
   @column()
-  declare complemento: string | null
+  declare complemento?: string | null
 
   @column()
-  declare ufId: string
+  declare siglaUf: string
 
   @column()
   declare clienteId: number
@@ -38,7 +39,10 @@ export default class Endereco extends BaseModel {
   @belongsTo(() => Cliente)
   declare cliente: BelongsTo<typeof Cliente>
 
-  @belongsTo(() => UnidadeFederativa)
+  @belongsTo(() => UnidadeFederativa, {
+    foreignKey: 'siglaUf',
+    localKey: 'siglaUf',
+  })
   declare unidadeFederativa: BelongsTo<typeof UnidadeFederativa>
 
   @column.dateTime({ autoCreate: true })

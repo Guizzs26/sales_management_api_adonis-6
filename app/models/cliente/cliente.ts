@@ -7,6 +7,7 @@ import Endereco from '../endereco/endereco.js'
 
 export default class Cliente extends BaseModel {
   static selfAssignPrimaryKey = true
+  static table = 'clientes'
 
   @column({ isPrimary: true })
   declare id: string
@@ -21,7 +22,7 @@ export default class Cliente extends BaseModel {
   declare email: string
 
   @column()
-  declare telefone: string | null
+  declare telefone?: string | null
 
   @column.date()
   declare dataNascimentoFundacao: DateTime
