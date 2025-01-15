@@ -3,6 +3,47 @@ import { DateTime } from 'luxon'
 import { TipoPessoa } from '../../../types/cliente/cliente_type.js'
 import { regraNumeroTelefone } from './validador_customizado_telefone.js'
 
+const validarPessoa = vine.group([
+  // Validação específica para para PF
+  vine.group.if((data) => data.tipo === 'PF', {
+    nomeCompleto: vine.string().minLength(2).maxLength(127).alpha({
+      allowSpaces: true,
+      allowUnderscores: false,
+      allowDashes: false,
+    }),
+
+    dataNascimentoFundacao: vine
+      .date({
+        formats: ['DD/MM/YYYY'],
+      })
+      .beforeOrEqual('today')
+      .afterOrEqual('1900-01-01') // Não pode ser mais de 120 anos atrás
+      .transform((value) => {
+        const date = new Date(value)
+        return DateTime.fromJSDate(date)
+      }),
+  }),
+
+  vine.group.if((data) => data.tipo === 'PJ', {
+    // Validação específica para PJ
+    nomeCompleto: vine.string().minLength(2).maxLength(127).alphaNumeric({
+      allowSpaces: true,
+      allowUnderscores: true,
+      allowDashes: true,
+    }),
+
+    dataNascimentoFundacao: vine
+      .date({
+        formats: ['DD/MM/YYYY'],
+      })
+      .beforeOrEqual('today')
+      .transform((value) => {
+        const date = new Date(value)
+        return DateTime.fromJSDate(date)
+      }),
+  }),
+])
+
 export const criarClienteSchema = vine
   .object({
     cpfCnpj: vine.string(), // Não vai ficar assim, apenas para teste
@@ -56,56 +97,6 @@ export const criarClienteSchema = vine
       })
     ),
   })
-  .merge(
-    vine.group([
-      // Validação específica para para PF
-      vine.group.if((data) => data.tipo === 'PF', {
-        nomeCompleto: vine
-          .string()
-          .alpha({
-            allowSpaces: true,
-            allowUnderscores: false,
-            allowDashes: false,
-          })
-          .minLength(2)
-          .maxLength(127),
-
-        dataNascimentoFundacao: vine
-          .date({
-            formats: ['DD/MM/YYYY'],
-          })
-          .beforeOrEqual('today')
-          .afterOrEqual('1900-01-01') // Não pode ser mais de 120 anos atrás
-          .transform((value) => {
-            const date = new Date(value)
-
-            return DateTime.fromJSDate(date)
-          }),
-      }),
-      vine.group.if((data) => data.tipo === 'PJ', {
-        // Validação específica para para PJ
-        nomeCompleto: vine
-          .string()
-          .alphaNumeric({
-            allowSpaces: true,
-            allowUnderscores: true,
-            allowDashes: true,
-          })
-          .minLength(2)
-          .maxLength(127),
-
-        dataNascimentoFundacao: vine
-          .date({
-            formats: ['DD/MM/YYYY'],
-          })
-          .beforeOrEqual('today')
-          .transform((value) => {
-            const date = new Date(value)
-
-            return DateTime.fromJSDate(date)
-          }),
-      }),
-    ])
-  )
+  .merge(validarPessoa)
 
 export const criarClienteValidator = vine.compile(criarClienteSchema)
