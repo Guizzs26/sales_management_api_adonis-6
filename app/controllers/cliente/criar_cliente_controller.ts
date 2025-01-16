@@ -2,17 +2,15 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import CriarClienteService from '../../services/cliente/criar_cliente_service.js'
 import { criarClienteValidator } from '#validators/cliente/criar_cliente_validador'
-import ViaCEP from '../../clients/via_cep.js'
-import axios from 'axios'
+import ViaCEP from '../../clients/via_cep_api_client.js'
 import { EnderecoCompleto } from '../../../types/cliente/cliente_type.js'
 
 @inject()
 export default class CriarClienteController {
-  private viaCEP: ViaCEP
-
-  constructor(private criarClienteService: CriarClienteService) {
-    this.viaCEP = new ViaCEP(axios)
-  }
+  constructor(
+    private criarClienteService: CriarClienteService,
+    private viaCEP: ViaCEP
+  ) {}
 
   public async handle({ request, response }: HttpContext): Promise<void> {
     const { nomeCompleto, cpfCnpj, email, telefone, dataNascimentoFundacao, tipo, enderecos } =

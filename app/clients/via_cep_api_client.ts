@@ -1,4 +1,4 @@
-import { AxiosStatic } from 'axios'
+import axios, { AxiosStatic } from 'axios'
 
 export type RespostaViaCep = {
   readonly cep: string
@@ -14,6 +14,7 @@ export type RespostaViaCep = {
   readonly gia: string
   readonly ddd: string
   readonly siafi: string
+  readonly erro?: boolean
 }
 
 export type RespostaViaCepNormalizada = {
@@ -32,24 +33,32 @@ export type RequestEndereco = {
 export default class ViaCEP {
   private readonly baseURL = 'https://viacep.com.br/ws'
 
-  constructor(protected request: AxiosStatic) {}
+  constructor(protected request: AxiosStatic = axios) {}
 
   public async buscarEnderecos(enderecos: RequestEndereco[]): Promise<RespostaViaCepNormalizada[]> {
-    const enderecosNormalizados: RespostaViaCepNormalizada[] = []
+    const respostasNormalizadas = await Promise.all(
+      enderecos.map(async (endereco) => {
+        try {
+          const resposta = await this.request.get<RespostaViaCep>(
+            `${this.baseURL}/${endereco.cep}/json/`
+          )
 
-    for (const endereco of enderecos) {
-      try {
-        const response = await this.request.get<RespostaViaCep>(
-          `${this.baseURL}/${endereco.cep}/json/`
-        )
+          // Verifica se o CEP retornou um erro na resposta (erro = true)
+          if (resposta.data.erro) {
+            throw new Error(`CEP inválido ou não encontrado: ${endereco.cep}`)
+          }
 
-        enderecosNormalizados.push(this.normalizarResposta(response.data))
-      } catch (error) {
-        console.error(`Erro ao buscar CEP ${endereco.cep}:`, error)
-      }
-    }
+          return this.normalizarResposta(resposta.data)
+        } catch (error) {
+          const mensagemErro =
+            error instanceof Error ? error.message : 'Erro desconhecido ao buscar CEP.'
 
-    return enderecosNormalizados
+          throw new Error(`Falha ao buscar o CEP ${endereco.cep}: ${mensagemErro}`)
+        }
+      })
+    )
+
+    return respostasNormalizadas
   }
 
   private normalizarResposta(endereco: RespostaViaCep): RespostaViaCepNormalizada {

@@ -6,11 +6,11 @@ import { regraNumeroTelefone } from './validador_customizado_telefone.js'
 const validarPessoa = vine.group([
   // Validação específica para para PF
   vine.group.if((data) => data.tipo === 'PF', {
-    nomeCompleto: vine.string().minLength(2).maxLength(127).alpha({
-      allowSpaces: true,
-      allowUnderscores: false,
-      allowDashes: false,
-    }),
+    nomeCompleto: vine
+      .string()
+      .minLength(2)
+      .maxLength(127)
+      .regex(/^[A-Za-zÀ-ÿ\s]+$/),
 
     dataNascimentoFundacao: vine
       .date({
@@ -26,11 +26,11 @@ const validarPessoa = vine.group([
 
   vine.group.if((data) => data.tipo === 'PJ', {
     // Validação específica para PJ
-    nomeCompleto: vine.string().minLength(2).maxLength(127).alphaNumeric({
-      allowSpaces: true,
-      allowUnderscores: true,
-      allowDashes: true,
-    }),
+    nomeCompleto: vine
+      .string()
+      .minLength(2)
+      .maxLength(127)
+      .regex(/^[A-Za-zÀ-ÿ0-9\s\-_]+$/),
 
     dataNascimentoFundacao: vine
       .date({
@@ -83,10 +83,6 @@ export const criarClienteSchema = vine
             return value
           })
           .fixedLength(8),
-        // .unique(async (db, value) => {
-        //   const row = await db.from('enderecos').where('cep', value).first()
-        //   return row === null
-        // }),
 
         numero: vine.string().minLength(1).maxLength(20),
         complemento: vine.string().minLength(1).maxLength(127).nullable().optional(),
