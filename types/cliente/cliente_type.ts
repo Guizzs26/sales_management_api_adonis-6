@@ -5,6 +5,7 @@ export enum TipoPessoa {
   PJ = 'PJ',
 }
 
+// Payload para criar o cliente no Service
 export type CriarClientePayload = {
   nomeCompleto: string
   cpfCnpj: string

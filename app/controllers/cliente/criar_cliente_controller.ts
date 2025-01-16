@@ -24,7 +24,7 @@ export default class CriarClienteController {
       ...enderecosNormalizados[index],
       cep: endereco.cep,
       numero: endereco.numero,
-      complemento: endereco.complemento || null,
+      complemento: endereco.complemento,
       siglaUf: endereco.siglaUf,
     }))
 

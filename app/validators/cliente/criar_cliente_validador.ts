@@ -46,9 +46,6 @@ const validarPessoa = vine.group([
 
 export const criarClienteSchema = vine
   .object({
-    cpfCnpj: vine.string(), // Não vai ficar assim, apenas para teste
-
-    // Ok
     email: vine
       .string()
       .email({ allow_underscores: true })
@@ -61,7 +58,9 @@ export const criarClienteSchema = vine
         return row === null
       }),
 
-    // +- pronto, tem como melhorar, principalmente a validação customizada do telefone.
+    tipo: vine.enum(TipoPessoa),
+
+    // +- pronto, tem como melhorar, principalmente a validação customizada do telefone fixo.
     telefone: vine
       .string()
       .parse((value: unknown) => {
@@ -70,9 +69,6 @@ export const criarClienteSchema = vine
       .nullable()
       .optional()
       .use(regraNumeroTelefone()),
-
-    // Ok
-    tipo: vine.enum(TipoPessoa),
 
     enderecos: vine.array(
       vine.object({
@@ -86,16 +82,19 @@ export const criarClienteSchema = vine
             }
             return value
           })
-          .fixedLength(8)
-          .unique(async (db, value) => {
-            const row = await db.from('enderecos').where('cep', value).first()
-            return row === null
-          }),
+          .fixedLength(8),
+        // .unique(async (db, value) => {
+        //   const row = await db.from('enderecos').where('cep', value).first()
+        //   return row === null
+        // }),
+
         numero: vine.string().minLength(1).maxLength(20),
-        complemento: vine.string().minLength(1).maxLength(127).optional(),
+        complemento: vine.string().minLength(1).maxLength(127).nullable().optional(),
         siglaUf: vine.string(),
       })
     ),
+
+    cpfCnpj: vine.string(), // Não vai ficar assim, apenas para teste
   })
   .merge(validarPessoa)
 
