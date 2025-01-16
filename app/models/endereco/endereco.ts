@@ -34,7 +34,7 @@ export default class Endereco extends BaseModel {
   declare siglaUf: string
 
   @column()
-  declare clienteId: number
+  declare clienteId: string
 
   @belongsTo(() => Cliente)
   declare cliente: BelongsTo<typeof Cliente>

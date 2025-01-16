@@ -74,12 +74,11 @@ export const criarClienteSchema = vine
     // Ok
     tipo: vine.enum(TipoPessoa),
 
-    // Enderecos também não vai ficar assim, apenas para teste
     enderecos: vine.array(
       vine.object({
         cep: vine
           .string()
-          .regex(/^\d{5}-\d{3}|\d{8}$/) // Aceitar o formato com ou sem hífen
+          .regex(/^\d{5}-\d{3}|\d{8}$/)
           .parse((value: unknown) => {
             if (typeof value === 'string') {
               // Remover qualquer caractere não numérico (incluindo hífen)
@@ -87,10 +86,11 @@ export const criarClienteSchema = vine
             }
             return value
           })
-          .fixedLength(8),
-        logradouro: vine.string().minLength(1).maxLength(127),
-        bairro: vine.string(),
-        localidade: vine.string(),
+          .fixedLength(8)
+          .unique(async (db, value) => {
+            const row = await db.from('enderecos').where('cep', value).first()
+            return row === null
+          }),
         numero: vine.string().minLength(1).maxLength(20),
         complemento: vine.string().minLength(1).maxLength(127).optional(),
         siglaUf: vine.string(),

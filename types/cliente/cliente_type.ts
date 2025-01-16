@@ -12,18 +12,20 @@ export type CriarClientePayload = {
   telefone?: string | null
   dataNascimentoFundacao: DateTime
   tipo: TipoPessoa
-  enderecos: EnderecoPayload[]
+  enderecos: EnderecoCompleto[]
 }
 
-export type EnderecoPayload = {
+export type EnderecoCompleto = {
   cep: string
+  siglaUf: string
   localidade: string
-  logradouro: string
   bairro: string
+  logradouro: string
   numero: string
   complemento?: string | null
-  siglaUf: string
 }
+
+//
 
 export type PaginationMetadata = {
   meta: {
