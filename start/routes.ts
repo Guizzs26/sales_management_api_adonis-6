@@ -1,3 +1,4 @@
+const PlanosController = () => import('#controllers/plano/planos_controller')
 import router from '@adonisjs/core/services/router'
 
 const CriarClienteController = () => import('#controllers/cliente/criar_cliente_controller')
@@ -14,10 +15,12 @@ router
         router.get('/', [ListarClientesController]).as('index')
         router.get('/:id', [BuscarClienteController]).as('show')
         router.put('/:id', [AtualizarClienteController]).as('update')
-        router.delete('/:id', [RemoverClienteController]).as('remove')
+        router.delete('/:id', [RemoverClienteController]).as('destroy')
       })
       .prefix('clientes')
       .as('clientes')
+
+    router.resource('planos', PlanosController).apiOnly()
   })
   .prefix('api/v1')
   .as('api/v1')
