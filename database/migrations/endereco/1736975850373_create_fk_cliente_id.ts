@@ -7,7 +7,6 @@ export default class extends BaseSchema {
     this.schema.alterTable(this.tableName, (table) => {
       table
         .uuid('cliente_id')
-        .unsigned()
         .notNullable()
         .references('id')
         .inTable('clientes')
