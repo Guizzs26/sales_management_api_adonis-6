@@ -36,7 +36,7 @@ export default class CriarClienteController {
       enderecos: enderecosCompletos,
     })
 
-    return response.status(201).send({
+    response.status(201).send({
       data: novoCliente,
     })
   }

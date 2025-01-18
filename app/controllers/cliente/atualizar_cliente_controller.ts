@@ -6,9 +6,9 @@ import AtualizarClienteService from '#services/cliente/atualizar_cliente_service
 export default class AtualizarClienteController {
   constructor(private atualizarClienteService: AtualizarClienteService) {}
 
-  async handle({ request, response, params }: HttpContext): Promise<void> {
+  async handle({ request, response }: HttpContext): Promise<void> {
+    const { id } = request.params()
     const { nomeCompleto, email, telefone } = request.only(['nomeCompleto', 'email', 'telefone'])
-    const { id } = params
 
     const cliente = await this.atualizarClienteService.execute(id, {
       nomeCompleto,
@@ -16,6 +16,6 @@ export default class AtualizarClienteController {
       telefone,
     })
 
-    return response.send(cliente)
+    response.send(cliente)
   }
 }

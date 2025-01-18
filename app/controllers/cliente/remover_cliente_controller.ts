@@ -6,11 +6,11 @@ import RemoverClienteService from '#services/cliente/remover_cliente_service'
 export default class RemoverClienteController {
   constructor(private removerClienteService: RemoverClienteService) {}
 
-  async handle({ params, response }: HttpContext): Promise<void> {
-    const { id } = params
+  async handle({ request, response }: HttpContext): Promise<void> {
+    const { id } = request.params()
 
     await this.removerClienteService.execute(id)
 
-    return response.status(204).send({ message: 'Cliente removido com sucesso!' })
+    response.status(204)
   }
 }

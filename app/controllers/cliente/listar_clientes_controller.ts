@@ -17,6 +17,6 @@ export default class ListarClientesController {
       limit
     )
 
-    return response.send(clientesPaginados)
+    response.send(clientesPaginados)
   }
 }

@@ -1,6 +1,6 @@
-import Plano from '#models/plano/plano'
 import type { HttpContext } from '@adonisjs/core/http'
 import { RespostaPaginada } from '../../../types/cliente/cliente_type.js'
+import Plano from '#models/plano/plano'
 
 export default class PlanosController {
   async index({ request, response }: HttpContext) {
@@ -25,14 +25,49 @@ export default class PlanosController {
       },
     }
 
-    return planos.toJSON() as RespostaPaginada<Plano>
+    response.send(planos.toJSON() as RespostaPaginada<Plano>)
   }
 
-  async store({ request }: HttpContext) {}
+  async store({ request, response }: HttpContext) {
+    const { nome, descricao, precoBase } = request.body()
 
-  async show({ params }: HttpContext) {}
+    const novoPlano = await Plano.create({ nome, descricao, precoBase })
 
-  async update({ params, request }: HttpContext) {}
+    return response.status(201).send({
+      data: novoPlano,
+    })
+  }
 
-  async destroy({ params }: HttpContext) {}
+  async show({ request, response }: HttpContext) {
+    const { id } = request.params()
+
+    const plano = await Plano.findOrFail(id)
+
+    response.send(plano)
+  }
+
+  async update({ request, response }: HttpContext) {
+    const { nome, descricao, precoBase } = request.only(['nome', 'descricao', 'precoBase'])
+    const { id } = request.params()
+
+    const plano = await Plano.findByOrFail(id)
+
+    if (nome) plano.nome = nome
+    if (descricao) plano.delete = descricao
+    if (precoBase) plano.precoBase = precoBase
+
+    await plano.save()
+
+    response.send(plano)
+  }
+
+  async destroy({ request, response }: HttpContext) {
+    const { id } = request.params()
+
+    const plano = await Plano.findByOrFail(id)
+
+    await plano.delete()
+
+    response.status(204)
+  }
 }
