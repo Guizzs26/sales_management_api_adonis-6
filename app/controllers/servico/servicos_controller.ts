@@ -3,7 +3,7 @@ import { RespostaPaginada } from '../../../types/cliente/cliente_type.js'
 import Servico from '#models/servico/servico'
 
 export default class ServicosController {
-  async index({ request, response }: HttpContext) {
+  async index({ request, response }: HttpContext): Promise<void> {
     const page = request.input('page', 1)
     let limit = request.input('limit', 10)
 
@@ -28,7 +28,7 @@ export default class ServicosController {
     response.send(servicos.toJSON() as RespostaPaginada<Servico>)
   }
 
-  async store({ request, response }: HttpContext) {
+  async store({ request, response }: HttpContext): Promise<void> {
     const { nome, descricao, precoBase } = request.body()
 
     const novoServico = await Servico.create({ nome, descricao, precoBase })
@@ -38,7 +38,7 @@ export default class ServicosController {
     })
   }
 
-  async show({ request, response }: HttpContext) {
+  async show({ request, response }: HttpContext): Promise<void> {
     const { id } = request.params()
 
     const servico = await Servico.findOrFail(id)
@@ -46,7 +46,7 @@ export default class ServicosController {
     response.send(servico)
   }
 
-  async update({ request, response }: HttpContext) {
+  async update({ request, response }: HttpContext): Promise<void> {
     const { nome, descricao, precoBase } = request.only(['nome', 'descricao', 'precoBase'])
     const { id } = request.params()
 
@@ -61,7 +61,7 @@ export default class ServicosController {
     response.send(servico)
   }
 
-  async destroy({ request, response }: HttpContext) {
+  async destroy({ request, response }: HttpContext): Promise<void> {
     const { id } = request.params()
 
     const servico = await Servico.findOrFail(id)

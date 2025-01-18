@@ -3,7 +3,7 @@ import { RespostaPaginada } from '../../../types/cliente/cliente_type.js'
 import Plano from '#models/plano/plano'
 
 export default class PlanosController {
-  async index({ request, response }: HttpContext) {
+  async index({ request, response }: HttpContext): Promise<void> {
     const page = request.input('page', 1)
     let limit = request.input('limit', 10)
 
@@ -28,7 +28,7 @@ export default class PlanosController {
     response.send(planos.toJSON() as RespostaPaginada<Plano>)
   }
 
-  async store({ request, response }: HttpContext) {
+  async store({ request, response }: HttpContext): Promise<void> {
     const { nome, descricao, precoBase } = request.body()
 
     const novoPlano = await Plano.create({ nome, descricao, precoBase })
@@ -38,7 +38,7 @@ export default class PlanosController {
     })
   }
 
-  async show({ request, response }: HttpContext) {
+  async show({ request, response }: HttpContext): Promise<void> {
     const { id } = request.params()
 
     const plano = await Plano.findOrFail(id)
@@ -46,7 +46,7 @@ export default class PlanosController {
     response.send(plano)
   }
 
-  async update({ request, response }: HttpContext) {
+  async update({ request, response }: HttpContext): Promise<void> {
     const { nome, descricao, precoBase } = request.only(['nome', 'descricao', 'precoBase'])
     const { id } = request.params()
 
@@ -61,7 +61,7 @@ export default class PlanosController {
     response.send(plano)
   }
 
-  async destroy({ request, response }: HttpContext) {
+  async destroy({ request, response }: HttpContext): Promise<void> {
     const { id } = request.params()
 
     const plano = await Plano.findByOrFail(id)
