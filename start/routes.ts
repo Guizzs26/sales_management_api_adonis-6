@@ -1,4 +1,3 @@
-const PlanosController = () => import('#controllers/plano/planos_controller')
 import router from '@adonisjs/core/services/router'
 
 const CriarClienteController = () => import('#controllers/cliente/criar_cliente_controller')
@@ -6,6 +5,9 @@ const ListarClientesController = () => import('#controllers/cliente/listar_clien
 const BuscarClienteController = () => import('#controllers/cliente/buscar_cliente_controller')
 const AtualizarClienteController = () => import('#controllers/cliente/atualizar_cliente_controller')
 const RemoverClienteController = () => import('#controllers/cliente/remover_cliente_controller')
+
+const PlanosController = () => import('#controllers/plano/planos_controller')
+const ServicosController = () => import('#controllers/servico/servicos_controller')
 
 router
   .group(() => {
@@ -21,6 +23,7 @@ router
       .as('clientes')
 
     router.resource('planos', PlanosController).apiOnly()
+    router.resource('servicos', ServicosController).apiOnly()
   })
   .prefix('api/v1')
   .as('api/v1')
