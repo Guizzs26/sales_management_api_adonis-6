@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon'
 import { BaseModel, beforeCreate, column, hasMany } from '@adonisjs/lucid/orm'
 import { randomUUID } from 'node:crypto'
-import PrecoPlanosUf from './preco_planos_uf.js'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
+import PrecoPlanosUf from './preco_planos_uf.js'
 
 export default class Plano extends BaseModel {
   static selfAssignPrimaryKey = true
