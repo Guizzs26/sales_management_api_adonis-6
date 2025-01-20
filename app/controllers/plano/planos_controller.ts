@@ -35,7 +35,7 @@ export default class PlanosController {
 
     const novoPlano = await Plano.create({ nome, descricao, precoBase })
 
-    return response.status(201).send({
+    response.status(201).send({
       data: novoPlano,
     })
   }
