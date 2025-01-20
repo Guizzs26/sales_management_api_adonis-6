@@ -15,7 +15,7 @@ export default class Plano extends BaseModel {
   declare nome: string
 
   @column()
-  declare descricao: string | null
+  declare descricao?: string | null
 
   @column()
   declare precoBase: number

@@ -1,6 +1,8 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { RespostaPaginada } from '../../../types/cliente/cliente_type.js'
 import Plano from '#models/plano/plano'
+import { criarPlanoValidador } from '#validators/plano/criar_plano_validator'
+import { atualizarPlanoValidator } from '#validators/plano/atualizar_plano'
 
 export default class PlanosController {
   async index({ request, response }: HttpContext): Promise<void> {
@@ -29,7 +31,7 @@ export default class PlanosController {
   }
 
   async store({ request, response }: HttpContext): Promise<void> {
-    const { nome, descricao, precoBase } = request.body()
+    const { nome, descricao, precoBase } = await request.validateUsing(criarPlanoValidador)
 
     const novoPlano = await Plano.create({ nome, descricao, precoBase })
 
@@ -47,13 +49,13 @@ export default class PlanosController {
   }
 
   async update({ request, response }: HttpContext): Promise<void> {
-    const { nome, descricao, precoBase } = request.only(['nome', 'descricao', 'precoBase'])
+    const { nome, descricao, precoBase } = await request.validateUsing(atualizarPlanoValidator)
     const { id } = request.params()
 
-    const plano = await Plano.findByOrFail(id)
+    const plano = await Plano.findOrFail(id)
 
     if (nome) plano.nome = nome
-    if (descricao) plano.delete = descricao
+    if (descricao) plano.descricao = descricao
     if (precoBase) plano.precoBase = precoBase
 
     await plano.save()
@@ -64,7 +66,7 @@ export default class PlanosController {
   async destroy({ request, response }: HttpContext): Promise<void> {
     const { id } = request.params()
 
-    const plano = await Plano.findByOrFail(id)
+    const plano = await Plano.findOrFail(id)
 
     await plano.delete()
 

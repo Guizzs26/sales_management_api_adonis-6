@@ -1,6 +1,8 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { RespostaPaginada } from '../../../types/cliente/cliente_type.js'
 import Servico from '#models/servico/servico'
+import { criarServicoValidador } from '#validators/servico/criar_servico_validator'
+import { atualizarServicoValidator } from '#validators/servico/atualizar_servico'
 
 export default class ServicosController {
   async index({ request, response }: HttpContext): Promise<void> {
@@ -29,11 +31,11 @@ export default class ServicosController {
   }
 
   async store({ request, response }: HttpContext): Promise<void> {
-    const { nome, descricao, precoBase } = request.body()
+    const { nome, descricao, precoBase } = await request.validateUsing(criarServicoValidador)
 
     const novoServico = await Servico.create({ nome, descricao, precoBase })
 
-    return response.status(201).send({
+    response.status(201).send({
       data: novoServico,
     })
   }
@@ -47,7 +49,7 @@ export default class ServicosController {
   }
 
   async update({ request, response }: HttpContext): Promise<void> {
-    const { nome, descricao, precoBase } = request.only(['nome', 'descricao', 'precoBase'])
+    const { nome, descricao, precoBase } = await request.validateUsing(atualizarServicoValidator)
     const { id } = request.params()
 
     const servico = await Servico.findOrFail(id)
