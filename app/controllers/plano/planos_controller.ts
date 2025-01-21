@@ -3,6 +3,8 @@ import { RespostaPaginada } from '../../../types/cliente/cliente_type.js'
 import Plano from '#models/plano/plano'
 import { criarPlanoValidador } from '#validators/plano/criar_plano_validator'
 import { atualizarPlanoValidator } from '#validators/plano/atualizar_plano'
+import { criarPlanoComAjustesValidador } from '#validators/plano/plano_com_ajuste'
+import db from '@adonisjs/lucid/services/db'
 
 export default class PlanosController {
   async index({ request, response }: HttpContext): Promise<void> {
@@ -37,6 +39,37 @@ export default class PlanosController {
 
     response.status(201).send({
       data: novoPlano,
+    })
+  }
+
+  async criarPlanoComAjustes({ request, response }: HttpContext) {
+    const { nome, descricao, precoBase, ajustesUf } = await request.validateUsing(
+      criarPlanoComAjustesValidador
+    )
+
+    const novoPlanoComAjustes = await db.transaction(async (trx) => {
+      const plano = new Plano()
+
+      plano.merge({ nome, descricao, precoBase })
+      plano.useTransaction(trx)
+
+      await plano.save()
+
+      const ajustesFormatados = ajustesUf.map((ajuste) => ({
+        siglaUf: ajuste.siglaUf,
+        percentualAjuste: ajuste.percentualAjuste,
+      }))
+
+      await plano.related('precosUfs').createMany(ajustesFormatados)
+
+      return plano
+    })
+
+    // lazy loading fora da transaction p/ evitar possível deadlock
+    await novoPlanoComAjustes.load('precosUfs')
+
+    response.status(201).send({
+      data: novoPlanoComAjustes,
     })
   }
 

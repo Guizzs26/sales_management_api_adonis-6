@@ -24,6 +24,14 @@ router
 
     router.resource('planos', PlanosController).apiOnly()
     router.resource('servicos', ServicosController).apiOnly()
+
+    router
+      .post('/planos/com-ajustes', [PlanosController, 'criarPlanoComAjustes'])
+      .as('planos.comAjustes')
+
+    router
+      .post('servicos/com-ajustes', [ServicosController, 'criarServicoComAjustes'])
+      .as('servicos.comAjustes')
   })
   .prefix('api/v1')
   .as('api/v1')

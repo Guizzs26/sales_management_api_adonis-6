@@ -3,6 +3,8 @@ import { RespostaPaginada } from '../../../types/cliente/cliente_type.js'
 import Servico from '#models/servico/servico'
 import { criarServicoValidador } from '#validators/servico/criar_servico_validator'
 import { atualizarServicoValidator } from '#validators/servico/atualizar_servico'
+import db from '@adonisjs/lucid/services/db'
+import { criarServicoComAjustesValidador } from '#validators/servico/servico_com_ajustes'
 
 export default class ServicosController {
   async index({ request, response }: HttpContext): Promise<void> {
@@ -37,6 +39,37 @@ export default class ServicosController {
 
     response.status(201).send({
       data: novoServico,
+    })
+  }
+
+  async criarServicoComAjustes({ request, response }: HttpContext) {
+    const { nome, descricao, precoBase, ajustesUf } = await request.validateUsing(
+      criarServicoComAjustesValidador
+    )
+
+    const novoServicoComAjustes = await db.transaction(async (trx) => {
+      const servico = new Servico()
+
+      servico.merge({ nome, descricao, precoBase })
+      servico.useTransaction(trx)
+
+      await servico.save()
+
+      const ajustesFormatados = ajustesUf.map((ajuste) => ({
+        siglaUf: ajuste.siglaUf,
+        percentualAjuste: ajuste.percentualAjuste,
+      }))
+
+      await servico.related('precosUfs').createMany(ajustesFormatados)
+
+      return servico
+    })
+
+    // lazy loading fora da transaction p/ evitar possível deadlock
+    await novoServicoComAjustes.load('precosUfs')
+
+    response.status(201).send({
+      data: novoServicoComAjustes,
     })
   }
 

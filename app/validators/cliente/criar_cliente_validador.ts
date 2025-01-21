@@ -86,7 +86,7 @@ export const criarClienteSchema = vine
 
         numero: vine.string().minLength(1).maxLength(20),
         complemento: vine.string().minLength(1).maxLength(127).nullable().optional(),
-        siglaUf: vine.string(),
+        siglaUf: vine.string().trim(),
       })
     ),
 
