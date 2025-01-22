@@ -13,7 +13,7 @@ export default class Servico extends BaseModel {
   declare id: string
 
   @column()
-  declare nome: string
+  declare nomeServico: string
 
   @column()
   declare descricao?: string | null

@@ -32,6 +32,11 @@ router
     router
       .post('servicos/com-ajustes', [ServicosController, 'criarServicoComAjustes'])
       .as('servicos.comAjustes')
+
+    router
+      .group(() => {})
+      .prefix('vendas')
+      .as('vendas')
   })
   .prefix('api/v1')
   .as('api/v1')

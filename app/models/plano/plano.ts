@@ -13,7 +13,7 @@ export default class Plano extends BaseModel {
   declare id: string
 
   @column()
-  declare nome: string
+  declare nomePlano: string
 
   @column()
   declare descricao?: string | null

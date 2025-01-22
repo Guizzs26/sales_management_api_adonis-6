@@ -1,12 +1,12 @@
 import vine from '@vinejs/vine'
 
 const criarPlanoSchema = vine.object({
-  nome: vine
+  nomePlano: vine
     .string()
     .minLength(2)
     .maxLength(127)
     .unique(async (db, value) => {
-      const row = await db.from('planos').where('nome', value).first()
+      const row = await db.from('planos').where('nomePlano', value).first()
       return row === null
     }),
 

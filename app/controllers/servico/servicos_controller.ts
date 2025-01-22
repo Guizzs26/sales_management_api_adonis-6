@@ -33,9 +33,9 @@ export default class ServicosController {
   }
 
   async store({ request, response }: HttpContext): Promise<void> {
-    const { nome, descricao, precoBase } = await request.validateUsing(criarServicoValidador)
+    const { nomeServico, descricao, precoBase } = await request.validateUsing(criarServicoValidador)
 
-    const novoServico = await Servico.create({ nome, descricao, precoBase })
+    const novoServico = await Servico.create({ nomeServico, descricao, precoBase })
 
     response.status(201).send({
       data: novoServico,
@@ -43,14 +43,14 @@ export default class ServicosController {
   }
 
   async criarServicoComAjustes({ request, response }: HttpContext) {
-    const { nome, descricao, precoBase, ajustesUf } = await request.validateUsing(
+    const { nomeServico, descricao, precoBase, ajustesUf } = await request.validateUsing(
       criarServicoComAjustesValidador
     )
 
     const novoServicoComAjustes = await db.transaction(async (trx) => {
       const servico = new Servico()
 
-      servico.merge({ nome, descricao, precoBase })
+      servico.merge({ nomeServico, descricao, precoBase })
       servico.useTransaction(trx)
 
       await servico.save()
@@ -82,12 +82,13 @@ export default class ServicosController {
   }
 
   async update({ request, response }: HttpContext): Promise<void> {
-    const { nome, descricao, precoBase } = await request.validateUsing(atualizarServicoValidator)
+    const { nomeServico, descricao, precoBase } =
+      await request.validateUsing(atualizarServicoValidator)
     const { id } = request.params()
 
     const servico = await Servico.findOrFail(id)
 
-    if (nome) servico.nome = nome
+    if (nomeServico) servico.nomeServico = nomeServico
     if (descricao) servico.descricao = descricao
     if (precoBase) servico.precoBase = precoBase
 

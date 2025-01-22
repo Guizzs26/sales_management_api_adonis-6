@@ -33,9 +33,9 @@ export default class PlanosController {
   }
 
   async store({ request, response }: HttpContext): Promise<void> {
-    const { nome, descricao, precoBase } = await request.validateUsing(criarPlanoValidador)
+    const { nomePlano, descricao, precoBase } = await request.validateUsing(criarPlanoValidador)
 
-    const novoPlano = await Plano.create({ nome, descricao, precoBase })
+    const novoPlano = await Plano.create({ nomePlano, descricao, precoBase })
 
     response.status(201).send({
       data: novoPlano,
@@ -43,14 +43,14 @@ export default class PlanosController {
   }
 
   async criarPlanoComAjustes({ request, response }: HttpContext) {
-    const { nome, descricao, precoBase, ajustesUf } = await request.validateUsing(
+    const { nomePlano, descricao, precoBase, ajustesUf } = await request.validateUsing(
       criarPlanoComAjustesValidador
     )
 
     const novoPlanoComAjustes = await db.transaction(async (trx) => {
       const plano = new Plano()
 
-      plano.merge({ nome, descricao, precoBase })
+      plano.merge({ nomePlano, descricao, precoBase })
       plano.useTransaction(trx)
 
       await plano.save()
@@ -82,12 +82,12 @@ export default class PlanosController {
   }
 
   async update({ request, response }: HttpContext): Promise<void> {
-    const { nome, descricao, precoBase } = await request.validateUsing(atualizarPlanoValidator)
+    const { nomePlano, descricao, precoBase } = await request.validateUsing(atualizarPlanoValidator)
     const { id } = request.params()
 
     const plano = await Plano.findOrFail(id)
 
-    if (nome) plano.nome = nome
+    if (nomePlano) plano.nomePlano = nomePlano
     if (descricao) plano.descricao = descricao
     if (precoBase) plano.precoBase = precoBase
 

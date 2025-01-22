@@ -6,7 +6,7 @@ export default class TabelaServicos extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').primary()
-      table.string('nome').notNullable()
+      table.string('nomeServico').notNullable()
       table.text('descricao').nullable()
       table.decimal('preco_base', 10, 2).notNullable()
 

@@ -6,7 +6,7 @@ export default class TabelaPlanos extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').primary()
-      table.string('nome', 127).notNullable().unique()
+      table.string('nomePlano', 127).notNullable().unique()
       table.text('descricao').nullable()
       table.decimal('preco_base', 10, 2).notNullable()
 
