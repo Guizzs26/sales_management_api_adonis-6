@@ -3,6 +3,7 @@ import { BaseModel, beforeCreate, column, hasMany } from '@adonisjs/lucid/orm'
 import { randomUUID } from 'node:crypto'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import PrecoPlanosUf from './preco_planos_uf.js'
+import Venda from '#models/venda/venda'
 
 export default class Plano extends BaseModel {
   static selfAssignPrimaryKey = true
@@ -24,6 +25,11 @@ export default class Plano extends BaseModel {
     foreignKey: 'planoId',
   })
   declare precosUfs: HasMany<typeof PrecoPlanosUf>
+
+  @hasMany(() => Venda, {
+    foreignKey: 'planoId',
+  })
+  declare vendas: HasMany<typeof Venda>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

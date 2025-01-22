@@ -4,6 +4,7 @@ import { randomUUID } from 'node:crypto'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import type { TipoPessoa } from '../../../types/cliente/cliente_type.js'
 import Endereco from '../endereco/endereco.js'
+import Venda from '#models/venda/venda'
 
 export default class Cliente extends BaseModel {
   static selfAssignPrimaryKey = true
@@ -32,6 +33,11 @@ export default class Cliente extends BaseModel {
 
   @hasMany(() => Endereco)
   declare enderecos: HasMany<typeof Endereco>
+
+  @hasMany(() => Venda, {
+    foreignKey: 'clienteId',
+  })
+  declare vendas: HasMany<typeof Venda>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
