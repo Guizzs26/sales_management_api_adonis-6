@@ -8,6 +8,7 @@ const RemoverClienteController = () => import('#controllers/cliente/remover_clie
 
 const PlanosController = () => import('#controllers/plano/planos_controller')
 const ServicosController = () => import('#controllers/servico/servicos_controller')
+const CriarVendaController = () => import('#controllers/venda/criar_venda_controller')
 
 router
   .group(() => {
@@ -34,7 +35,9 @@ router
       .as('servicos.comAjustes')
 
     router
-      .group(() => {})
+      .group(() => {
+        router.post('/:id', [CriarVendaController]).as('store')
+      })
       .prefix('vendas')
       .as('vendas')
   })
