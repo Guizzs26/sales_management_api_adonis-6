@@ -6,21 +6,34 @@ import Servico from '#models/servico/servico'
 import Venda from '#models/venda/venda'
 import db from '@adonisjs/lucid/services/db'
 
+export type CriarVendaPayload = {
+  id: string
+  plano: string
+  servicos: string[]
+  descontoAplicado?: number | null
+}
+
 export default class CriarVendaService {
-  async execute(id: string, plano: string, servicos: string[], descontoAplicado?: number | null) {
+  async execute({ id, plano, servicos, descontoAplicado }: CriarVendaPayload) {
     // 1. Verificar se o cliente existe
     const cliente = await Cliente.findOrFail(id)
 
     // 2. Verificar limite de vendas ativas (máximo de 10 vendas ativas)
-    const vendasAtivas = await db.from('vendas').where('clienteId', id).count('* as total')
-    const totalVendas = Number(vendasAtivas[0].total)
+
+    const quantidadeVendasCliente = await db
+      .from('vendas')
+      .select('cliente_id')
+      .where('cliente_id', id)
+      .count('* as total')
+
+    const totalVendas = Number(quantidadeVendasCliente[0].total)
 
     if (totalVendas >= 10) {
-      throw new Error('Limite de vendas ativas atingido!')
+      throw new Error('Limite de vendas atingido! Cada cliente pode ter no máximo 10 vendas.')
     }
 
     // 3. Verificar se o plano existe
-    const planoSelecionado = await Plano.query().where('nomePlano', plano).firstOrFail()
+    const planoSelecionado = await db.from('planos').where('nome_plano', plano).firstOrFail()
 
     // 4. Ajustar preço do plano conforme a UF do cliente
     const precoPlanoUf = await PrecoPlanosUf.query()
@@ -33,28 +46,35 @@ export default class CriarVendaService {
       : planoSelecionado.precoBase
 
     // 5. Verificar e ajustar os serviços
-    const servicosSelecionados = await Servico.query().whereIn('nomeServico', servicos).fetch()
+    const servicosSelecionados = await Servico.query().whereIn('nome_servico', servicos)
     const servicosIds = servicosSelecionados.map((servico) => servico.id)
-    let valorTotalServicos = 0
 
-    for (let servico of servicosSelecionados) {
-      const precoServicoUf = await PrecoServicosUf.query()
-        .where('siglaUf', cliente.enderecos[0].siglaUf)
-        .where('servicoId', servico.id)
-        .first()
-      valorTotalServicos += precoServicoUf
-        ? servico.precoBase * (1 + precoServicoUf.percentualAjuste / 100)
-        : servico.precoBase
-    }
+    // Calcular preço total dos serviços em paralelo
+    const valoresServicos = await Promise.all(
+      servicosSelecionados.map(async (servico) => {
+        const precoServicoUf = await PrecoServicosUf.query()
+          .where('siglaUf', cliente.enderecos[0].siglaUf)
+          .where('servicoId', servico.id)
+          .first()
+
+        return precoServicoUf
+          ? servico.precoBase * (1 + precoServicoUf.percentualAjuste / 100)
+          : servico.precoBase
+      })
+    )
+
+    const valorTotalServicos = valoresServicos.reduce((total, valor) => total + valor, 0)
 
     // 6. Calcular o valor total da venda
     const valorTotalVenda = precoPlanoFinal + valorTotalServicos - (descontoAplicado || 0)
 
-    // 7. Criar a venda
+    const valorFinalVenda = Math.max(valorTotalVenda, 0)
+
+    // 7. Criar a venda com clienteId
     const venda = await Venda.create({
-      clienteId,
+      clienteId: cliente.id,
       planoId: planoSelecionado.id,
-      valorTotalVenda,
+      valorTotalVenda: valorFinalVenda,
       descontoAplicado,
     })
 

@@ -8,10 +8,10 @@ export default class CriarVendaController {
   constructor(private criarVendaService: CriarVendaService) {}
 
   async handle({ request, response }: HttpContext) {
-    const { plano, servicos, descontoAplicado } = await request.validateUsing(criarVendaValidador)
     const { id } = request.params()
+    const { plano, servicos, descontoAplicado } = await request.validateUsing(criarVendaValidador)
 
-    const venda = await this.criarVendaService.execute(id, plano, servicos, descontoAplicado)
+    const venda = await this.criarVendaService.execute({ id, plano, servicos, descontoAplicado })
 
     response.status(201).send(venda)
   }

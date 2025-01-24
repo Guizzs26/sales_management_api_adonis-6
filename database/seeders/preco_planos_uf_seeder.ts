@@ -1,30 +1,30 @@
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
+import Plano from '#models/plano/plano'
 import PrecoPlanosUf from '#models/plano/preco_planos_uf'
 
-const PRECOS_PLANOS_UF = [
-  // Plano Básico
-  { planoId: 'fbcc33c1-1072-410d-94f2-09c55d373a90', siglaUf: 'MS', percentualAjuste: 5 }, // 5% de ajuste para MS
-  { planoId: 'fbcc33c1-1072-410d-94f2-09c55d373a90', siglaUf: 'MT', percentualAjuste: 3 }, // 3% de ajuste para MT
-  { planoId: 'fbcc33c1-1072-410d-94f2-09c55d373a90', siglaUf: 'GO', percentualAjuste: 4 }, // 4% de ajuste para GO
-  { planoId: 'fbcc33c1-1072-410d-94f2-09c55d373a90', siglaUf: 'PR', percentualAjuste: 6 }, // 6% de ajuste para PR
-
-  // Plano Avançado
-  { planoId: '05dd7b6b-c795-457a-ac54-294b3cdeecdb', siglaUf: 'MS', percentualAjuste: 7 }, // 7% de ajuste para MS
-  { planoId: '05dd7b6b-c795-457a-ac54-294b3cdeecdb', siglaUf: 'MT', percentualAjuste: 5 }, // 5% de ajuste para MT
-  { planoId: '05dd7b6b-c795-457a-ac54-294b3cdeecdb', siglaUf: 'GO', percentualAjuste: 6 }, // 6% de ajuste para GO
-  { planoId: '05dd7b6b-c795-457a-ac54-294b3cdeecdb', siglaUf: 'PR', percentualAjuste: 8 }, // 8% de ajuste para PR
-
-  // Plano Premium
-  { planoId: 'edd2cdbe-f601-4e61-ba99-06e36291f501', siglaUf: 'MS', percentualAjuste: 10 }, // 10% de ajuste para MS
-  { planoId: 'edd2cdbe-f601-4e61-ba99-06e36291f501', siglaUf: 'MT', percentualAjuste: 9 }, // 9% de ajuste para MT
-  { planoId: 'edd2cdbe-f601-4e61-ba99-06e36291f501', siglaUf: 'GO', percentualAjuste: 10 }, // 10% de ajuste para GO
-  { planoId: 'edd2cdbe-f601-4e61-ba99-06e36291f501', siglaUf: 'PR', percentualAjuste: 12 }, // 12% de ajuste para PR
-]
-
 export default class PrecoPlanosUfSeeder extends BaseSeeder {
+  public static environment = ['development', 'testing']
+
   public async run() {
+    // Busca todos os planos e seus IDs
+    const planos = await Plano.query().select('id', 'nome_plano')
+
+    // Mapeia os planos para um objeto, onde a chave é o nome do plano e o valor é o id
+    const planoMap = planos.reduce(
+      (map, plano) => {
+        map[plano.nomePlano] = plano.id
+        return map
+      },
+      {} as Record<string, string>
+    )
+
     const uniqueKey = 'planoId'
 
-    await PrecoPlanosUf.updateOrCreateMany(uniqueKey, PRECOS_PLANOS_UF)
+    await PrecoPlanosUf.updateOrCreateMany(uniqueKey, [
+      { planoId: planoMap['Plano Básico'], siglaUf: 'SP', percentualAjuste: 10 },
+      { planoId: planoMap['Plano Básico'], siglaUf: 'RJ', percentualAjuste: 5 },
+      { planoId: planoMap['Plano Padrão'], siglaUf: 'MG', percentualAjuste: 7 },
+      { planoId: planoMap['Plano Premium'], siglaUf: 'BA', percentualAjuste: 15 },
+    ])
   }
 }

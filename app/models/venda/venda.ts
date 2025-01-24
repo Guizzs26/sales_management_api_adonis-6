@@ -23,7 +23,7 @@ export default class Venda extends BaseModel {
   declare valorTotalVenda: number
 
   @column()
-  declare descontoAplicado?: number
+  declare descontoAplicado?: number | null
 
   @belongsTo(() => Cliente, {
     foreignKey: 'clienteId',

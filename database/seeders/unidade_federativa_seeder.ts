@@ -32,6 +32,8 @@ const UNIDADES_FEDERATIVAS = [
 ]
 
 export default class UnidadeFederativaSeeder extends BaseSeeder {
+  public static environment = ['development', 'testing']
+
   async run() {
     const uniqueKey = 'siglaUf'
 

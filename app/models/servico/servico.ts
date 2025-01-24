@@ -12,7 +12,7 @@ export default class Servico extends BaseModel {
   @column({ isPrimary: true })
   declare id: string
 
-  @column()
+  @column({ columnName: 'nome_servico' })
   declare nomeServico: string
 
   @column()

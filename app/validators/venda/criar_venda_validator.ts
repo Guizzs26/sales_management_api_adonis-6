@@ -1,8 +1,22 @@
 import vine from '@vinejs/vine'
 
 const criarVendaSchema = vine.object({
-  plano: vine.string().minLength(2).maxLength(127),
-  servicos: vine.array(vine.string()),
+  plano: vine.string().exists(async (db, value) => {
+    const row = await db.from('planos').where('nomePlano', value).first()
+    return !!row
+  }),
+
+  servicos: vine
+    .array(
+      vine.string().exists(async (db, value) => {
+        const row = await db.from('servicos').where('nomeServico', value).first()
+        return !!row
+      })
+    )
+    .minLength(1)
+    .maxLength(8)
+    .distinct(),
+
   descontoAplicado: vine.number().optional().nullable(),
 })
 

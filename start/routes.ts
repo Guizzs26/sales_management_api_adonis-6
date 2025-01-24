@@ -27,7 +27,7 @@ router
     router.resource('servicos', ServicosController).apiOnly()
 
     router
-      .post('/planos/com-ajustes', [PlanosController, 'criarPlanoComAjustes'])
+      .post('planos/com-ajustes', [PlanosController, 'criarPlanoComAjustes'])
       .as('planos.comAjustes')
 
     router
