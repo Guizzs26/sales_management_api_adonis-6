@@ -8,9 +8,9 @@ export default class PlanoSeeder extends BaseSeeder {
     const uniqueKey = 'nomePlano'
 
     await Plano.updateOrCreateMany(uniqueKey, [
-      { nomePlano: 'Plano Básico', descricao: 'Ideal para iniciantes', precoBase: 49.9 },
-      { nomePlano: 'Plano Padrão', descricao: 'Recomendado para empresas', precoBase: 99.9 },
-      { nomePlano: 'Plano Premium', descricao: 'Completo com suporte 24h', precoBase: 199.9 },
+      { nomePlano: 'Plano Básico', descricao: 'Ideal para iniciantes', precoBase: 95.0 },
+      { nomePlano: 'Plano Avançado', descricao: 'Recomendado para empresas', precoBase: 150.0 },
+      { nomePlano: 'Plano Premium', descricao: 'Completo com suporte 24h', precoBase: 300.0 },
     ])
   }
 }

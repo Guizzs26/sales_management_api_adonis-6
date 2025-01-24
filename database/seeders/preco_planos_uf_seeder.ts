@@ -21,10 +21,23 @@ export default class PrecoPlanosUfSeeder extends BaseSeeder {
     const uniqueKey = 'planoId'
 
     await PrecoPlanosUf.updateOrCreateMany(uniqueKey, [
-      { planoId: planoMap['Plano Básico'], siglaUf: 'SP', percentualAjuste: 10 },
-      { planoId: planoMap['Plano Básico'], siglaUf: 'RJ', percentualAjuste: 5 },
-      { planoId: planoMap['Plano Padrão'], siglaUf: 'MG', percentualAjuste: 7 },
-      { planoId: planoMap['Plano Premium'], siglaUf: 'BA', percentualAjuste: 15 },
+      // Plano Básico
+      { planoId: planoMap['Plano Básico'], siglaUf: 'MS', percentualAjuste: 0.5 },
+      { planoId: planoMap['Plano Básico'], siglaUf: 'MT', percentualAjuste: 0.7 },
+      { planoId: planoMap['Plano Básico'], siglaUf: 'GO', percentualAjuste: 0.6 },
+      { planoId: planoMap['Plano Básico'], siglaUf: 'PR', percentualAjuste: 0.1 },
+
+      // Plano Avançado
+      { planoId: planoMap['Plano Avançado'], siglaUf: 'MS', percentualAjuste: 0.8 },
+      { planoId: planoMap['Plano Avançado'], siglaUf: 'MT', percentualAjuste: 0.9 },
+      { planoId: planoMap['Plano Avançado'], siglaUf: 'GO', percentualAjuste: 0.1 },
+      { planoId: planoMap['Plano Avançado'], siglaUf: 'PR', percentualAjuste: 0.12 },
+
+      // Plano Premium
+      { planoId: planoMap['Plano Premium'], siglaUf: 'MS', percentualAjuste: 0.15 },
+      { planoId: planoMap['Plano Premium'], siglaUf: 'MT', percentualAjuste: 0.13 },
+      { planoId: planoMap['Plano Premium'], siglaUf: 'GO', percentualAjuste: 0.14 },
+      { planoId: planoMap['Plano Premium'], siglaUf: 'PR', percentualAjuste: 0.17 },
     ])
   }
 }
