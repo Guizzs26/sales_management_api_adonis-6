@@ -12,7 +12,7 @@ export default class Plano extends BaseModel {
   @column({ isPrimary: true })
   declare id: string
 
-  @column({ columnName: 'nome_plano' })
+  @column({ columnName: 'nomePlano' })
   declare nomePlano: string
 
   @column()

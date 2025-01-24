@@ -12,7 +12,7 @@ export default class Servico extends BaseModel {
   @column({ isPrimary: true })
   declare id: string
 
-  @column({ columnName: 'nome_servico' })
+  @column({ columnName: 'nomeServico' })
   declare nomeServico: string
 
   @column()
@@ -28,7 +28,6 @@ export default class Servico extends BaseModel {
     pivotTable: 'servico_venda',
     pivotForeignKey: 'servico_id',
     pivotRelatedForeignKey: 'venda_id',
-    pivotTimestamps: true,
   })
   declare vendas: ManyToMany<typeof Venda>
 
