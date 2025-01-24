@@ -8,7 +8,10 @@ const RemoverClienteController = () => import('#controllers/cliente/remover_clie
 
 const PlanosController = () => import('#controllers/plano/planos_controller')
 const ServicosController = () => import('#controllers/servico/servicos_controller')
+
 const CriarVendaController = () => import('#controllers/venda/criar_venda_controller')
+const BuscarVendaController = () => import('#controllers/venda/buscar_venda_controller')
+const RemoverVendaController = () => import('#controllers/venda/remover_venda_controller')
 
 router
   .group(() => {
@@ -37,6 +40,8 @@ router
     router
       .group(() => {
         router.post('/:id', [CriarVendaController]).as('store')
+        router.get('/:id', [BuscarVendaController]).as('show')
+        router.delete('/:id', [RemoverVendaController]).as('destroy')
       })
       .prefix('vendas')
       .as('vendas')
