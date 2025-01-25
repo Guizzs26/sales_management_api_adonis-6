@@ -1,6 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { BuscarVendaService } from '#services/venda/buscar_venda_service'
+import BuscarVendaService from '#services/venda/buscar_venda_service'
 
 @inject()
 export default class BuscarVendaController {

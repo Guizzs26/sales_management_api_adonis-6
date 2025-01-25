@@ -1,3 +1,4 @@
+const ListarVendasController = () => import('#controllers/venda/listar_vendas_controller')
 import router from '@adonisjs/core/services/router'
 
 const CriarClienteController = () => import('#controllers/cliente/criar_cliente_controller')
@@ -41,6 +42,7 @@ router
     router
       .group(() => {
         router.post('/:id', [CriarVendaController]).as('store')
+        router.get('/', [ListarVendasController]).as('index')
         router.get('/:id', [BuscarVendaController]).as('show')
         router.put('/:id', [AtualizarVendasController]).as('update')
         router.delete('/:id', [RemoverVendaController]).as('destroy')
