@@ -54,6 +54,7 @@ router
 
     router
       .group(() => {
+        router.get('/vendas', [DashboardController, 'vendas']).as('dashboardVendas')
         router.get('/clientes', [DashboardController, 'clientes']).as('dashboardClientes')
       })
       .prefix('dashboard')
