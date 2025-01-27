@@ -1,4 +1,3 @@
-const ListarVendasController = () => import('#controllers/venda/listar_vendas_controller')
 import router from '@adonisjs/core/services/router'
 
 const CriarClienteController = () => import('#controllers/cliente/criar_cliente_controller')
@@ -11,9 +10,12 @@ const PlanosController = () => import('#controllers/plano/planos_controller')
 const ServicosController = () => import('#controllers/servico/servicos_controller')
 
 const CriarVendaController = () => import('#controllers/venda/criar_venda_controller')
+const ListarVendasController = () => import('#controllers/venda/listar_vendas_controller')
 const BuscarVendaController = () => import('#controllers/venda/buscar_venda_controller')
 const AtualizarVendasController = () => import('#controllers/venda/atualizar_venda_controller')
 const RemoverVendaController = () => import('#controllers/venda/remover_venda_controller')
+
+const DashboardController = () => import('#controllers/dashboard/dashboard_controller')
 
 router
   .group(() => {
@@ -49,6 +51,13 @@ router
       })
       .prefix('vendas')
       .as('vendas')
+
+    router
+      .group(() => {
+        router.get('/clientes', [DashboardController, 'clientes']).as('dashboardClientes')
+      })
+      .prefix('dashboard')
+      .as('dashboard')
   })
   .prefix('api/v1')
   .as('api/v1')
