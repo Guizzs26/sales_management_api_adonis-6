@@ -23,7 +23,7 @@ export type RespostaViaCepNormalizada = {
   logradouro: string
 }
 
-export type RequestEndereco = {
+export type EnderecoRequest = {
   cep: string
   numero: string
   complemento?: string | null
@@ -35,7 +35,7 @@ export default class ViaCEP {
 
   constructor(protected request: AxiosStatic = axios) {}
 
-  public async buscarEnderecos(enderecos: RequestEndereco[]): Promise<RespostaViaCepNormalizada[]> {
+  public async buscarEnderecos(enderecos: EnderecoRequest[]): Promise<RespostaViaCepNormalizada[]> {
     const respostasNormalizadas = await Promise.all(
       enderecos.map(async (endereco) => {
         try {

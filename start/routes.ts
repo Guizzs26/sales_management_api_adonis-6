@@ -21,11 +21,11 @@ router
   .group(() => {
     router
       .group(() => {
-        router.post('/', [CriarClienteController]).as('store')
-        router.get('/', [ListarClientesController]).as('index')
-        router.get('/:id', [BuscarClienteController]).as('show')
-        router.put('/:id', [AtualizarClienteController]).as('update')
-        router.delete('/:id', [RemoverClienteController]).as('destroy')
+        router.post('/', [CriarClienteController]).as('criar')
+        router.get('/', [ListarClientesController]).as('listar')
+        router.get('/:id', [BuscarClienteController]).as('buscar')
+        router.put('/:id', [AtualizarClienteController]).as('atualizar')
+        router.delete('/:id', [RemoverClienteController]).as('remover')
       })
       .prefix('clientes')
       .as('clientes')

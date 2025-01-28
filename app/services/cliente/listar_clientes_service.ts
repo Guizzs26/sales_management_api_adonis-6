@@ -1,5 +1,5 @@
 import Cliente from '#models/cliente/cliente'
-import { RespostaPaginada } from '../../../types/cliente/cliente_type.js'
+import { RespostaPaginada } from '../../types/cliente/cliente_type.js'
 
 const LIMITE_MAXIMO = 50
 

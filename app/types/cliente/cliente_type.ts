@@ -13,17 +13,24 @@ export type CriarClientePayload = {
   telefone?: string | null
   dataNascimentoFundacao: DateTime
   tipo: TipoPessoa
-  enderecos: EnderecoCompleto[]
+  enderecos: EnderecoNormalizadoCompleto[]
 }
 
-export type EnderecoCompleto = {
+export type EnderecoNormalizadoCompleto = {
   cep: string
-  siglaUf: string
   localidade: string
   bairro: string
   logradouro: string
   numero: string
   complemento?: string | null
+  siglaUf: string
+}
+
+export type EnderecoParcialRequest = {
+  cep: string
+  numero: string
+  complemento?: string | null
+  siglaUf: string
 }
 
 //

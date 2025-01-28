@@ -1,6 +1,6 @@
 import db from '@adonisjs/lucid/services/db'
-import Cliente from '../../models/cliente/cliente.js'
-import { CriarClientePayload } from '../../../types/cliente/cliente_type.js'
+import { CriarClientePayload } from '#types/cliente/cliente_type'
+import Cliente from '#models/cliente/cliente'
 
 export default class CriarClienteService {
   public async execute({
@@ -12,18 +12,21 @@ export default class CriarClienteService {
     tipo,
     enderecos,
   }: CriarClientePayload): Promise<Cliente> {
-    const novoCliente = await db.transaction(async (trx) => {
-      const cliente = new Cliente()
+    const novoCliente = await db.transaction(
+      async (trx) => {
+        const cliente = new Cliente()
 
-      cliente.merge({ nomeCompleto, cpfCnpj, email, telefone, dataNascimentoFundacao, tipo })
-      cliente.useTransaction(trx)
+        cliente.merge({ nomeCompleto, cpfCnpj, email, telefone, dataNascimentoFundacao, tipo })
+        cliente.useTransaction(trx)
 
-      await cliente.save()
+        await cliente.save()
 
-      await cliente.related('enderecos').createMany(enderecos)
+        await cliente.related('enderecos').createMany(enderecos)
 
-      return cliente
-    })
+        return cliente
+      },
+      { isolationLevel: 'read committed' }
+    )
 
     // lazy loading fora da transaction p/ evitar possível deadlock
     await novoCliente.load('enderecos')

@@ -1,6 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { RespostaPaginada } from '../../../types/cliente/cliente_type.js'
+import { RespostaPaginada } from '../../types/cliente/cliente_type.js'
 import ListarClientesService from '../../services/cliente/listar_clientes_service.js'
 import Cliente from '#models/cliente/cliente'
 

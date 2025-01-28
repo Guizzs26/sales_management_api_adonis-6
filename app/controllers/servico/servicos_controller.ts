@@ -1,5 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import { RespostaPaginada } from '../../../types/cliente/cliente_type.js'
+import { RespostaPaginada } from '../../types/cliente/cliente_type.js'
 import Servico from '#models/servico/servico'
 import { criarServicoValidador } from '#validators/servico/criar_servico_validator'
 import { atualizarServicoValidator } from '#validators/servico/atualizar_servico'
