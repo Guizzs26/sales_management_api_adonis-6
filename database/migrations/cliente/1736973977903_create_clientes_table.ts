@@ -19,12 +19,13 @@ export default class TabelaClientes extends BaseSchema {
         })
         .notNullable()
 
-      table.timestamp('created_at')
-      table.timestamp('updated_at')
+      table.timestamp('created_at', { useTz: true })
+      table.timestamp('updated_at', { useTz: true })
     })
   }
 
   async down() {
+    this.schema.raw('DROP TYPE IF EXISTS "cliente_tipo"')
     this.schema.dropTable(this.tableName)
   }
 }

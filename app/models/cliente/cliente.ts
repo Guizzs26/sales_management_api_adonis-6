@@ -1,10 +1,10 @@
-import { BaseModel, beforeCreate, column, hasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, column, hasMany, beforeCreate } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 import { randomUUID } from 'node:crypto'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
-import type { TipoPessoa } from '../../types/cliente/cliente_type.js'
-import Endereco from '../endereco/endereco.js'
+import { TipoPessoa } from '#types/cliente/cliente_type'
 import Venda from '#models/venda/venda'
+import Endereco from '#models/endereco/endereco'
 
 export default class Cliente extends BaseModel {
   static selfAssignPrimaryKey = true
@@ -31,7 +31,9 @@ export default class Cliente extends BaseModel {
   @column()
   declare tipo: TipoPessoa
 
-  @hasMany(() => Endereco)
+  @hasMany(() => Endereco, {
+    foreignKey: 'clienteId',
+  })
   declare enderecos: HasMany<typeof Endereco>
 
   @hasMany(() => Venda, {
