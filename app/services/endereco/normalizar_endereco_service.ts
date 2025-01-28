@@ -1,6 +1,8 @@
+import { inject } from '@adonisjs/core'
 import ViaCEP from '#clients/via_cep_api_client'
 import { EnderecoParcialRequest, EnderecoNormalizadoCompleto } from '#types/cliente/cliente_type'
 
+@inject()
 export default class NormalizarEnderecosService {
   constructor(private viaCEP: ViaCEP) {}
 

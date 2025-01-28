@@ -1,4 +1,5 @@
 import axios, { AxiosStatic } from 'axios'
+import ViaCepException from '#exceptions/via_cep_exception'
 
 export type RespostaViaCep = {
   readonly cep: string
@@ -36,36 +37,32 @@ export default class ViaCEP {
   constructor(protected request: AxiosStatic = axios) {}
 
   public async buscarEnderecos(enderecos: EnderecoRequest[]): Promise<RespostaViaCepNormalizada[]> {
-    const respostasNormalizadas = await Promise.all(
-      enderecos.map(async (endereco) => {
-        try {
-          const resposta = await this.request.get<RespostaViaCep>(
-            `${this.baseURL}/${endereco.cep}/json/`
-          )
-
-          // Verifica se o CEP retornou um erro na resposta (erro = true)
-          if (resposta.data.erro) {
-            throw new Error(`CEP inválido ou não encontrado: ${endereco.cep}`)
-          }
-
-          return this.normalizarResposta(resposta.data)
-        } catch (error) {
-          const mensagemErro =
-            error instanceof Error ? error.message : 'Erro desconhecido ao buscar CEP.'
-
-          throw new Error(`Falha ao buscar o CEP ${endereco.cep}: ${mensagemErro}`)
-        }
-      })
+    const resposta = await Promise.all(
+      enderecos.map(async (endereco) => this.buscarCep(endereco.cep))
     )
 
-    return respostasNormalizadas
+    return resposta.map(this.normalizarResposta)
+  }
+
+  private async buscarCep(cep: string): Promise<RespostaViaCep> {
+    try {
+      const { data } = await this.request.get<RespostaViaCep>(`${this.baseURL}/${cep}/json/`)
+
+      if (data.erro) {
+        throw new ViaCepException(`CEP inválido ou não encontrado: ${cep}`)
+      }
+
+      return data
+    } catch (error) {
+      throw new ViaCepException(`Erro ao buscar CEP: ${cep}`)
+    }
   }
 
   private normalizarResposta(endereco: RespostaViaCep): RespostaViaCepNormalizada {
     return {
-      localidade: endereco.localidade,
-      bairro: endereco.bairro,
-      logradouro: endereco.logradouro,
+      localidade: endereco.localidade || '',
+      bairro: endereco.bairro || '',
+      logradouro: endereco.logradouro || '',
     }
   }
 }

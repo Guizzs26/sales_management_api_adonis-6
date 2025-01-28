@@ -12,19 +12,14 @@ export default class CriarClienteController {
   ) {}
 
   public async handle({ request, response }: HttpContext): Promise<void> {
-    const { nomeCompleto, cpfCnpj, email, telefone, dataNascimentoFundacao, tipo, enderecos } =
-      await request.validateUsing(criarClienteValidator)
+    const payload = await request.validateUsing(criarClienteValidator)
 
-    const enderecosNormalizados =
-      await this.normalizarEnderecosService.normalizarEnderecos(enderecos)
+    const enderecosNormalizados = await this.normalizarEnderecosService.normalizarEnderecos(
+      payload.enderecos
+    )
 
     const novoCliente = await this.criarClienteService.execute({
-      nomeCompleto,
-      cpfCnpj,
-      email,
-      telefone,
-      dataNascimentoFundacao,
-      tipo,
+      ...payload,
       enderecos: enderecosNormalizados,
     })
 
