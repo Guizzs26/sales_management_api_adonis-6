@@ -12,12 +12,6 @@ export default class DashboardController {
     const page = request.input('page', 1)
     const limit = request.input('limit', 20)
 
-    if (planoNome && planoNome.length < 4) {
-      return response.status(400).send({
-        message: 'O nome do plano deve ser mais específico (mínimo 4 caracteres).',
-      })
-    }
-
     // Filtro de vendas
     const vendas = await db
       .from('vendas')
@@ -38,7 +32,7 @@ export default class DashboardController {
 
       // Filtros
       .if(clienteNome, (query) => query.where('clientes.nome_completo', 'like', `%${clienteNome}%`))
-      .if(planoNome, (query) => query.where('planos.nomePlano', '=', `%${planoNome}%`))
+      .if(planoNome, (query) => query.where('planos.nomePlano', '=', planoNome))
       .if(servicoNome, (query) => query.where('servicos.nomeServico', 'like', `%${servicoNome}%`))
       .if(uf, (query) => query.where('unidades_federativas.sigla_uf', uf))
 
@@ -73,9 +67,34 @@ export default class DashboardController {
 
     const totalVendasValor = totalVendas[0]?.totalVendas || 0
 
+    // Possível uso, vou testar amanhã
+
+    // const vendasBaseQuery = db
+    //   .from('vendas')
+    //   .leftJoin('clientes', 'vendas.cliente_id', '=', 'clientes.id')
+    //   .leftJoin('planos', 'vendas.plano_id', '=', 'planos.id')
+    //   .leftJoin('servico_venda', 'vendas.id', '=', 'servico_venda.venda_id')
+    //   .leftJoin('servicos', 'servico_venda.servico_id', '=', 'servicos.id')
+    //   .leftJoin('enderecos', 'clientes.id', '=', 'enderecos.cliente_id')
+    //   .leftJoin('unidades_federativas', 'enderecos.sigla_uf', '=', 'unidades_federativas.sigla_uf')
+    //   .if(clienteNome, (query) => query.where('clientes.nome_completo', 'like', `%${clienteNome}%`))
+    //   .if(planoNome, (query) => query.where('planos.nomePlano', 'like', `%${planoNome}%`))
+    //   .if(servicoNome, (query) => query.where('servicos.nomeServico', 'like', `%${servicoNome}%`))
+    //   .if(uf, (query) => query.where('unidades_federativas.sigla_uf', uf))
+    //   .if(inicioPeriodo, (query) => query.where('vendas.created_at', '>=', inicioPeriodo))
+    //   .if(fimPeriodo, (query) => query.where('vendas.created_at', '<=', fimPeriodo))
+
+    // const vendas = await vendasBaseQuery
+    //   .clone()
+    //   .orderBy('vendas.created_at', 'desc')
+    //   .paginate(page, limit)
+
+    // const totalVendas = await vendasBaseQuery.clone().count('* as totalVendas')
+
     response.send({
       vendas,
       totalVendas: totalVendasValor,
+      // totalVendas,
     })
   }
 
