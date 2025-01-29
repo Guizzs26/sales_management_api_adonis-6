@@ -2,6 +2,7 @@ import app from '@adonisjs/core/services/app'
 import { HttpContext, ExceptionHandler } from '@adonisjs/core/http'
 import { errors } from '@adonisjs/core'
 import { errors as lucidErrors } from '@adonisjs/lucid'
+import { errors as VineErrors } from '@vinejs/vine'
 
 export default class HttpExceptionHandler extends ExceptionHandler {
   protected debug = !app.inProduction
@@ -17,6 +18,14 @@ export default class HttpExceptionHandler extends ExceptionHandler {
 
     if (error instanceof lucidErrors.E_ROW_NOT_FOUND) {
       ctx.response.status(404).send({
+        code: 'E_ROW_NOT_FOUND',
+        message: 'Registro não encontrado. Verifique o ID ou os parâmetros enviados.',
+      })
+      return
+    }
+
+    if (error instanceof VineErrors.E_VALIDATION_ERROR) {
+      ctx.response.status(422).send({
         code: 'E_ROW_NOT_FOUND',
         message: 'Registro não encontrado. Verifique o ID ou os parâmetros enviados.',
       })

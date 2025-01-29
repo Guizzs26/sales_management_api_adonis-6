@@ -119,4 +119,6 @@ async function validarNumeroTelefone(value: unknown, _: undefined, field: FieldC
   return phone
 }
 
-export const regraNumeroTelefone = vine.createRule(validarNumeroTelefone)
+export const regraNumeroTelefone = vine.createRule(validarNumeroTelefone, {
+  implicit: true,
+})

@@ -1,6 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { listarClientesValidator } from '#validators/cliente/listar_clientes.validator'
+import { listarClientesValidator } from '#validators/cliente/listar_clientes.validador'
 import ListarClientesService from '#services/cliente/listar_clientes_service'
 
 @inject()

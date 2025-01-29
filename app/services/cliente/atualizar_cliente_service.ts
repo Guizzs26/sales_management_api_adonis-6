@@ -1,5 +1,5 @@
-import Cliente from '#models/cliente/cliente'
 import { AtualizarClientePayload } from '../../types/cliente/cliente_type.js'
+import Cliente from '#models/cliente/cliente'
 
 export default class AtualizarClienteService {
   async execute(
