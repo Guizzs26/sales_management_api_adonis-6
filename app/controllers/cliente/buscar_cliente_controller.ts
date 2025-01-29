@@ -6,8 +6,8 @@ import BuscarClienteService from '#services/cliente/buscar_cliente_service'
 export default class BuscarClienteController {
   constructor(private buscarClienteService: BuscarClienteService) {}
 
-  async handle({ request, response }: HttpContext): Promise<void> {
-    const { id } = request.params()
+  async handle({ params, response }: HttpContext): Promise<void> {
+    const { id } = params
 
     const cliente = await this.buscarClienteService.execute(id)
 

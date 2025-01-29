@@ -17,6 +17,9 @@ const RemoverVendaController = () => import('#controllers/venda/remover_venda_co
 
 const DashboardController = () => import('#controllers/dashboard/dashboard_controller')
 
+// Matcher global para validar o id do parâmetro de rota
+router.where('id', router.matchers.uuid())
+
 router
   .group(() => {
     router
@@ -27,7 +30,7 @@ router
         router.put('/:id', [AtualizarClienteController]).as('atualizar')
         router.delete('/:id', [RemoverClienteController]).as('remover')
       })
-      .prefix('clientes')
+      .prefix('/clientes')
       .as('clientes')
 
     router.resource('planos', PlanosController).apiOnly()
@@ -60,5 +63,6 @@ router
       .prefix('dashboard')
       .as('dashboard')
   })
+
   .prefix('api/v1')
   .as('api/v1')
