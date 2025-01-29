@@ -5,7 +5,8 @@ export enum TipoPessoa {
   PJ = 'PJ',
 }
 
-// Payload para criar o cliente no Service
+// Criação de cliente
+
 export type CriarClientePayload = {
   nomeCompleto: string
   cpfCnpj: string
@@ -33,26 +34,26 @@ export type EnderecoParcialRequest = {
   siglaUf: string
 }
 
-//
+// Listagem de cliente e paginação
 
 export type PaginationMetadata = {
-  meta: {
-    total: number
-    perPage: number
-    currentPage: number
-    lastPage: number
-    firstPage: number
-    firstPageUrl: string
-    lastPageUrl: string
-    nextPageUrl: string | null
-    previousPageUrl: string | null
-  }
+  total: number
+  perPage: number
+  currentPage: number
+  lastPage: number
+  firstPage: number
+  firstPageUrl: string
+  lastPageUrl: string
+  nextPageUrl: string | null
+  previousPageUrl: string | null
 }
 
 export type RespostaPaginada<T> = {
   meta: PaginationMetadata
   data: T[]
 }
+
+// Atualização de cliente
 
 export type AtualizarClientePayload = {
   nomeCompleto?: string
