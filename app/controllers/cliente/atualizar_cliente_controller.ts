@@ -10,7 +10,6 @@ export default class AtualizarClienteController {
 
   async handle({ request, response, params }: HttpContext): Promise<void> {
     const cliente = await Cliente.findOrFail(params.id)
-    console.log(cliente)
 
     const payload = await request.validateUsing(atualizarClienteValidator, {
       meta: {
@@ -18,7 +17,7 @@ export default class AtualizarClienteController {
       },
     })
 
-    const clienteAtualizado = await this.atualizarClienteService.execute(params.id, payload)
+    const clienteAtualizado = await this.atualizarClienteService.execute(cliente, payload)
 
     response.send(clienteAtualizado)
   }

@@ -1,5 +1,5 @@
-import { Exception } from '@adonisjs/core/exceptions'
 import { HttpContext } from '@adonisjs/core/http'
+import { Exception } from '@adonisjs/core/exceptions'
 
 export default class ViaCepException extends Exception {
   static status = 400

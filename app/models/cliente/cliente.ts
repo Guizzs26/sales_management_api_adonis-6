@@ -16,7 +16,7 @@ export default class Cliente extends BaseModel {
   @column()
   declare nomeCompleto: string
 
-  @column()
+  @column({ serializeAs: null })
   declare cpfCnpj: string
 
   @column()

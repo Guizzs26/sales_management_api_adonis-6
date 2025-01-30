@@ -3,12 +3,11 @@ import Cliente from '#models/cliente/cliente'
 
 export default class AtualizarClienteService {
   async execute(
-    id: string,
+    cliente: Cliente,
     { nomeCompleto, email, telefone }: AtualizarClientePayload
   ): Promise<Cliente> {
-    const cliente = await Cliente.findOrFail(id)
-
     await cliente.merge({ nomeCompleto, email, telefone }).save()
+    await cliente.refresh()
 
     return cliente
   }

@@ -16,7 +16,7 @@ export default class CriarClienteService {
       async (trx) => {
         const cliente = new Cliente()
 
-        cliente.merge({ nomeCompleto, cpfCnpj, email, telefone, dataNascimentoFundacao, tipo })
+        cliente.fill({ nomeCompleto, cpfCnpj, email, telefone, dataNascimentoFundacao, tipo })
         cliente.useTransaction(trx)
 
         await cliente.save()
