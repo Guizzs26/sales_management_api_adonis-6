@@ -1,5 +1,5 @@
-import { DateTime } from 'luxon'
 import { BaseModel, beforeCreate, column, hasMany, manyToMany } from '@adonisjs/lucid/orm'
+import { DateTime } from 'luxon'
 import { randomUUID } from 'node:crypto'
 import type { HasMany, ManyToMany } from '@adonisjs/lucid/types/relations'
 import PrecoServicosUf from './preco_servicos_uf.js'
@@ -21,7 +21,9 @@ export default class Servico extends BaseModel {
   @column()
   declare precoBase: number
 
-  @hasMany(() => PrecoServicosUf)
+  @hasMany(() => PrecoServicosUf, {
+    foreignKey: 'servicoId',
+  })
   declare precosUfs: HasMany<typeof PrecoServicosUf>
 
   @manyToMany(() => Venda, {

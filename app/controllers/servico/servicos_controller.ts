@@ -1,39 +1,28 @@
+import db from '@adonisjs/lucid/services/db'
 import type { HttpContext } from '@adonisjs/core/http'
 import { RespostaPaginada } from '../../types/cliente/cliente_type.js'
+import { criarServicoValidator } from '#validators/servico/criar_servico_validador'
+import { criarServicoComAjustesValidator } from '#validators/servico/criar_servico_com_ajustes_validador'
+import { listarServicosValidator } from '#validators/servico/listar_planos_validador'
+import { atualizarServicoValidator } from '#validators/servico/atualizar_servico_validador'
 import Servico from '#models/servico/servico'
-import { criarServicoValidador } from '#validators/servico/criar_servico_validator'
-import { atualizarServicoValidator } from '#validators/servico/atualizar_servico'
-import db from '@adonisjs/lucid/services/db'
-import { criarServicoComAjustesValidador } from '#validators/servico/servico_com_ajustes'
 
 export default class ServicosController {
   async index({ request, response }: HttpContext): Promise<void> {
     const page = request.input('page', 1)
-    let limit = request.input('limit', 10)
+    const limit = request.input('limit', 10)
 
-    const servicos = await Servico.query().orderBy('created_at', 'asc').paginate(page, limit)
+    const payload = await request.validateUsing(listarServicosValidator, { data: { page, limit } })
 
-    servicos.namingStrategy = {
-      paginationMetaKeys() {
-        return {
-          total: 'total',
-          perPage: 'per_page',
-          currentPage: 'current_page',
-          lastPage: 'last_page',
-          firstPage: 'first_page',
-          firstPageUrl: 'first_page_url',
-          lastPageUrl: 'last_page_url',
-          nextPageUrl: 'next_page_url',
-          previousPageUrl: 'previous_page_url',
-        }
-      },
-    }
+    const servicos = await Servico.query()
+      .orderBy('created_at', 'asc')
+      .paginate(payload.page, payload.limit)
 
     response.send(servicos.toJSON() as RespostaPaginada<Servico>)
   }
 
   async store({ request, response }: HttpContext): Promise<void> {
-    const { nomeServico, descricao, precoBase } = await request.validateUsing(criarServicoValidador)
+    const { nomeServico, descricao, precoBase } = await request.validateUsing(criarServicoValidator)
 
     const novoServico = await Servico.create({ nomeServico, descricao, precoBase })
 
@@ -44,7 +33,7 @@ export default class ServicosController {
 
   async criarServicoComAjustes({ request, response }: HttpContext) {
     const { nomeServico, descricao, precoBase, ajustesUf } = await request.validateUsing(
-      criarServicoComAjustesValidador
+      criarServicoComAjustesValidator
     )
 
     const novoServicoComAjustes = await db.transaction(async (trx) => {
@@ -73,34 +62,28 @@ export default class ServicosController {
     })
   }
 
-  async show({ request, response }: HttpContext): Promise<void> {
-    const { id } = request.params()
-
-    const servico = await Servico.findOrFail(id)
+  async show({ params, response }: HttpContext): Promise<void> {
+    const servico = await Servico.findOrFail(params.id)
 
     response.send(servico)
   }
 
-  async update({ request, response }: HttpContext): Promise<void> {
+  async update({ request, response, params }: HttpContext): Promise<void> {
     const { nomeServico, descricao, precoBase } =
       await request.validateUsing(atualizarServicoValidator)
-    const { id } = request.params()
 
-    const servico = await Servico.findOrFail(id)
+    const servico = await Servico.findOrFail(params.id)
 
-    if (nomeServico) servico.nomeServico = nomeServico
-    if (descricao) servico.descricao = descricao
-    if (precoBase) servico.precoBase = precoBase
+    await servico.merge({ nomeServico, descricao, precoBase }).save()
+    await servico.refresh()
 
     await servico.save()
 
     response.send(servico)
   }
 
-  async destroy({ request, response }: HttpContext): Promise<void> {
-    const { id } = request.params()
-
-    const servico = await Servico.findOrFail(id)
+  async destroy({ params, response }: HttpContext): Promise<void> {
+    const servico = await Servico.findOrFail(params.id)
 
     await servico.delete()
 

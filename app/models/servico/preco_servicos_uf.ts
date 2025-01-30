@@ -1,5 +1,5 @@
-import { DateTime } from 'luxon'
 import { BaseModel, beforeCreate, belongsTo, column } from '@adonisjs/lucid/orm'
+import { DateTime } from 'luxon'
 import { randomUUID } from 'node:crypto'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import UnidadeFederativa from '#models/endereco/unidade_federativa'

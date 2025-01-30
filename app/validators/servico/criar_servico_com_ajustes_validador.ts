@@ -1,12 +1,12 @@
 import vine from '@vinejs/vine'
 
-const criarPlanoComAjustesSchema = vine.object({
-  nomePlano: vine
+const criarServicoComAjusteSchema = vine.object({
+  nomeServico: vine
     .string()
     .minLength(2)
     .maxLength(127)
     .unique(async (db, value) => {
-      const row = await db.from('planos').where('nomePlano', value).first()
+      const row = await db.from('servicos').where('nomeServicos', value).first()
       return row === null
     }),
 
@@ -21,4 +21,4 @@ const criarPlanoComAjustesSchema = vine.object({
   ),
 })
 
-export const criarPlanoComAjustesValidator = vine.compile(criarPlanoComAjustesSchema)
+export const criarServicoComAjustesValidator = vine.compile(criarServicoComAjusteSchema)
