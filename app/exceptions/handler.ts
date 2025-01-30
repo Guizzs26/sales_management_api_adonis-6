@@ -9,7 +9,7 @@ export default class HttpExceptionHandler extends ExceptionHandler {
 
   async handle(error: unknown, ctx: HttpContext) {
     if (error instanceof errors.E_ROUTE_NOT_FOUND) {
-      ctx.response.status(404).send({
+      ctx.response.status(error.status).send({
         code: 'E_ROUTE_NOT_FOUND',
         message: 'Rota não encontrada. Verifique o caminho ou os parâmetros enviados.',
       })
@@ -17,7 +17,7 @@ export default class HttpExceptionHandler extends ExceptionHandler {
     }
 
     if (error instanceof lucidErrors.E_ROW_NOT_FOUND) {
-      ctx.response.status(404).send({
+      ctx.response.status(error.status).send({
         code: 'E_ROW_NOT_FOUND',
         message: 'Registro não encontrado. Verifique o ID ou os parâmetros enviados.',
       })
@@ -25,9 +25,10 @@ export default class HttpExceptionHandler extends ExceptionHandler {
     }
 
     if (error instanceof VineErrors.E_VALIDATION_ERROR) {
-      ctx.response.status(422).send({
-        code: 'E_ROW_NOT_FOUND',
-        message: 'Registro não encontrado. Verifique o ID ou os parâmetros enviados.',
+      ctx.response.status(error.status).send({
+        code: 'E_VALIDATION_ERROR',
+        message: 'Ocorreu um erro na validação, verifique os parâmetros e dados enviados.',
+        data: { item: error.messages },
       })
       return
     }

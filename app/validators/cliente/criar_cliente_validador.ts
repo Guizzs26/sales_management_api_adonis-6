@@ -1,7 +1,7 @@
 import vine from '@vinejs/vine'
 import { DateTime } from 'luxon'
 import { TipoPessoa } from '../../types/cliente/cliente_type.js'
-import { regraNumeroTelefone } from './validador_customizado_telefone.js'
+import { regraNumeroTelefone } from '../regras/validador_customizado_telefone.js'
 
 const validarPessoa = vine.group([
   // Validação específica para para PF

@@ -8,11 +8,7 @@ export default class AtualizarClienteService {
   ): Promise<Cliente> {
     const cliente = await Cliente.findOrFail(id)
 
-    if (nomeCompleto) cliente.nomeCompleto = nomeCompleto
-    if (email) cliente.email = email
-    if (telefone) cliente.telefone = telefone
-
-    await cliente.save()
+    await cliente.merge({ nomeCompleto, email, telefone }).save()
 
     return cliente
   }

@@ -1,29 +1,12 @@
 import vine from '@vinejs/vine'
+import { TipoPessoa } from '#types/cliente/cliente_type'
+import { regraNumeroTelefone } from '#validators/regras/validador_customizado_telefone'
+import { nomeCompletoRule } from '#validators/regras/validator_customizado_nome_completo'
 
-const validarNomeCompletoPorTipo = vine.group([
-  // Validação específica para para PF
-  vine.group.if((data) => data.tipo === 'PF', {
-    nomeCompleto: vine
-      .string()
-      .minLength(2)
-      .maxLength(127)
-      .regex(/^[A-Za-zÀ-ÿ\s]+$/)
-      .optional(),
-  }),
+export const atualizarClienteValidator = vine.withMetaData<{ tipo: TipoPessoa }>().compile(
+  vine.object({
+    nomeCompleto: vine.string().use(nomeCompletoRule()).optional(),
 
-  vine.group.if((data) => data.tipo === 'PJ', {
-    // Validação específica para PJ
-    nomeCompleto: vine
-      .string()
-      .minLength(2)
-      .maxLength(127)
-      .regex(/^[A-Za-zÀ-ÿ0-9\s\-_]+$/)
-      .optional(),
-  }),
-])
-
-const atualizarClienteSchema = vine
-  .object({
     email: vine
       .string()
       .email({ allow_underscores: true })
@@ -39,14 +22,8 @@ const atualizarClienteSchema = vine
 
     telefone: vine
       .string()
-      .mobile(() => {
-        return {
-          locale: ['pt-BR'],
-          strictMode: true,
-        }
-      })
-      .optional(),
+      .parse((value) => String(value).replace(/\D/g, ''))
+      .optional()
+      .use(regraNumeroTelefone()),
   })
-  .merge(validarNomeCompletoPorTipo)
-
-export const atualizarClienteValidator = vine.compile(atualizarClienteSchema)
+)
