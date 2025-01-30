@@ -1,6 +1,6 @@
 import vine from '@vinejs/vine'
 
-const criarPlanoSchema = vine.object({
+const atualizarPlanoSchema = vine.object({
   nomePlano: vine
     .string()
     .minLength(2)
@@ -8,10 +8,11 @@ const criarPlanoSchema = vine.object({
     .unique(async (db, value) => {
       const row = await db.from('planos').where('nomePlano', value).first()
       return row === null
-    }),
+    })
+    .optional(),
 
   descricao: vine.string().maxLength(255).optional(),
-  precoBase: vine.number().positive().range([80, 1000]),
+  precoBase: vine.number().positive().range([80, 1000]).optional(),
 })
 
-export const criarPlanoValidator = vine.compile(criarPlanoSchema)
+export const atualizarPlanoValidator = vine.compile(atualizarPlanoSchema)

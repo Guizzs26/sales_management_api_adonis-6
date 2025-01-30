@@ -7,9 +7,7 @@ export default class BuscarClienteController {
   constructor(private buscarClienteService: BuscarClienteService) {}
 
   async handle({ params, response }: HttpContext): Promise<void> {
-    const { id } = params
-
-    const cliente = await this.buscarClienteService.execute(id)
+    const cliente = await this.buscarClienteService.execute(params.id)
 
     response.send(cliente)
   }

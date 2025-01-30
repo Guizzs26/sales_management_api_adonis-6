@@ -1,39 +1,28 @@
+import db from '@adonisjs/lucid/services/db'
 import type { HttpContext } from '@adonisjs/core/http'
 import { RespostaPaginada } from '../../types/cliente/cliente_type.js'
+import { criarPlanoValidator } from '#validators/plano/criar_plano_validator'
+import { criarPlanoComAjustesValidator } from '#validators/plano/criar_plano_com_ajuste_validador'
+import { listarPlanosValidator } from '#validators/plano/listar_planos_validador'
+import { atualizarPlanoValidator } from '#validators/plano/atualizar_plano_validador'
 import Plano from '#models/plano/plano'
-import { criarPlanoValidador } from '#validators/plano/criar_plano_validator'
-import { atualizarPlanoValidator } from '#validators/plano/atualizar_plano'
-import { criarPlanoComAjustesValidador } from '#validators/plano/plano_com_ajuste'
-import db from '@adonisjs/lucid/services/db'
 
 export default class PlanosController {
   async index({ request, response }: HttpContext): Promise<void> {
     const page = request.input('page', 1)
-    let limit = request.input('limit', 10)
+    const limit = request.input('limit', 10)
 
-    const planos = await Plano.query().orderBy('created_at', 'asc').paginate(page, limit)
+    const payload = await request.validateUsing(listarPlanosValidator, { data: { page, limit } })
 
-    planos.namingStrategy = {
-      paginationMetaKeys() {
-        return {
-          total: 'total',
-          perPage: 'per_page',
-          currentPage: 'current_page',
-          lastPage: 'last_page',
-          firstPage: 'first_page',
-          firstPageUrl: 'first_page_url',
-          lastPageUrl: 'last_page_url',
-          nextPageUrl: 'next_page_url',
-          previousPageUrl: 'previous_page_url',
-        }
-      },
-    }
+    const planos = await Plano.query()
+      .orderBy('created_at', 'asc')
+      .paginate(payload.page, payload.limit)
 
     response.send(planos.toJSON() as RespostaPaginada<Plano>)
   }
 
   async store({ request, response }: HttpContext): Promise<void> {
-    const { nomePlano, descricao, precoBase } = await request.validateUsing(criarPlanoValidador)
+    const { nomePlano, descricao, precoBase } = await request.validateUsing(criarPlanoValidator)
 
     const novoPlano = await Plano.create({ nomePlano, descricao, precoBase })
 
@@ -44,7 +33,7 @@ export default class PlanosController {
 
   async criarPlanoComAjustes({ request, response }: HttpContext) {
     const { nomePlano, descricao, precoBase, ajustesUf } = await request.validateUsing(
-      criarPlanoComAjustesValidador
+      criarPlanoComAjustesValidator
     )
 
     const novoPlanoComAjustes = await db.transaction(async (trx) => {
@@ -73,33 +62,25 @@ export default class PlanosController {
     })
   }
 
-  async show({ request, response }: HttpContext): Promise<void> {
-    const { id } = request.params()
-
-    const plano = await Plano.findOrFail(id)
+  async show({ params, response }: HttpContext): Promise<void> {
+    const plano = await Plano.findOrFail(params.id)
 
     response.send(plano)
   }
 
-  async update({ request, response }: HttpContext): Promise<void> {
+  async update({ request, response, params }: HttpContext): Promise<void> {
     const { nomePlano, descricao, precoBase } = await request.validateUsing(atualizarPlanoValidator)
-    const { id } = request.params()
 
-    const plano = await Plano.findOrFail(id)
+    const plano = await Plano.findOrFail(params.id)
 
-    if (nomePlano) plano.nomePlano = nomePlano
-    if (descricao) plano.descricao = descricao
-    if (precoBase) plano.precoBase = precoBase
-
-    await plano.save()
+    await plano.merge({ nomePlano, descricao, precoBase }).save()
+    await plano.refresh()
 
     response.send(plano)
   }
 
-  async destroy({ request, response }: HttpContext): Promise<void> {
-    const { id } = request.params()
-
-    const plano = await Plano.findOrFail(id)
+  async destroy({ params, response }: HttpContext): Promise<void> {
+    const plano = await Plano.findOrFail(params.id)
 
     await plano.delete()
 

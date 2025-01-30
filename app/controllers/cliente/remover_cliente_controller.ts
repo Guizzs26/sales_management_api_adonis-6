@@ -7,9 +7,7 @@ export default class RemoverClienteController {
   constructor(private removerClienteService: RemoverClienteService) {}
 
   async handle({ params, response }: HttpContext): Promise<void> {
-    const { id } = params
-
-    await this.removerClienteService.execute(id)
+    await this.removerClienteService.execute(params.id)
 
     response.status(204)
   }

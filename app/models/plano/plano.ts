@@ -1,5 +1,5 @@
-import { DateTime } from 'luxon'
 import { BaseModel, beforeCreate, column, hasMany } from '@adonisjs/lucid/orm'
+import { DateTime } from 'luxon'
 import { randomUUID } from 'node:crypto'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import PrecoPlanosUf from './preco_planos_uf.js'

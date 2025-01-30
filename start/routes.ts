@@ -22,6 +22,7 @@ router.where('id', router.matchers.uuid())
 
 router
   .group(() => {
+    // Rotas para clientes
     router
       .group(() => {
         router.post('/', [CriarClienteController]).as('criar')
@@ -33,28 +34,31 @@ router
       .prefix('/clientes')
       .as('clientes')
 
-    router.resource('planos', PlanosController).apiOnly()
-    router.resource('servicos', ServicosController).apiOnly()
-
+    // Rotas para planos
+    router.resource('/planos', PlanosController).apiOnly()
     router
-      .post('planos/com-ajustes', [PlanosController, 'criarPlanoComAjustes'])
-      .as('planos.comAjustes')
+      .post('/planos/com-ajustes', [PlanosController, 'criarPlanoComAjustes'])
+      .as('planoComAjustes')
 
+    // Rotas para servicos
+    router.resource('/servicos', ServicosController).apiOnly()
     router
-      .post('servicos/com-ajustes', [ServicosController, 'criarServicoComAjustes'])
-      .as('servicos.comAjustes')
+      .post('/servicos/com-ajustes', [ServicosController, 'criarServicoComAjustes'])
+      .as('servicoComAjustes')
 
+    // Rotas para vendas
     router
       .group(() => {
-        router.post('/:id', [CriarVendaController]).as('store')
-        router.get('/', [ListarVendasController]).as('index')
-        router.get('/:id', [BuscarVendaController]).as('show')
-        router.put('/:id', [AtualizarVendasController]).as('update')
-        router.delete('/:id', [RemoverVendaController]).as('destroy')
+        router.post('/:id', [CriarVendaController]).as('criar')
+        router.get('/', [ListarVendasController]).as('listar')
+        router.get('/:id', [BuscarVendaController]).as('buscar')
+        router.put('/:id', [AtualizarVendasController]).as('atualizar')
+        router.delete('/:id', [RemoverVendaController]).as('remover')
       })
       .prefix('vendas')
       .as('vendas')
 
+    // Rotas para dashboard
     router
       .group(() => {
         router.get('/vendas', [DashboardController, 'vendas']).as('dashboardVendas')

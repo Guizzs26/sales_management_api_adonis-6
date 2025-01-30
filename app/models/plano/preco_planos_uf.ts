@@ -1,8 +1,8 @@
-import { DateTime } from 'luxon'
 import { BaseModel, beforeCreate, belongsTo, column } from '@adonisjs/lucid/orm'
+import { DateTime } from 'luxon'
 import { randomUUID } from 'node:crypto'
-import UnidadeFederativa from '#models/endereco/unidade_federativa'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import UnidadeFederativa from '#models/endereco/unidade_federativa'
 import Plano from './plano.js'
 
 export default class PrecoPlanosUf extends BaseModel {

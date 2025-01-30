@@ -1,6 +1,7 @@
 import vine from '@vinejs/vine'
 
-const criarPlanoSchema = vine.object({
+// Definir futuramente limites para o percentual de ajuste.
+const criarPlanoComAjustesSchema = vine.object({
   nomePlano: vine
     .string()
     .minLength(2)
@@ -12,6 +13,13 @@ const criarPlanoSchema = vine.object({
 
   descricao: vine.string().maxLength(255).optional(),
   precoBase: vine.number().positive().range([80, 1000]),
+
+  ajustesUf: vine.array(
+    vine.object({
+      siglaUf: vine.string().fixedLength(2).trim(),
+      percentualAjuste: vine.number().range([0, 1]),
+    })
+  ),
 })
 
-export const criarPlanoValidator = vine.compile(criarPlanoSchema)
+export const criarPlanoComAjustesValidator = vine.compile(criarPlanoComAjustesSchema)
