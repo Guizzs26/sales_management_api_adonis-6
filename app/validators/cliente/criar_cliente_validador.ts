@@ -106,7 +106,11 @@ export const criarClienteSchema = vine
             }
             return value
           })
-          .fixedLength(8),
+          .fixedLength(8)
+          .unique(async (db, value) => {
+            const row = await db.from('enderecos').where('cep', value).first()
+            return row === null
+          }),
 
         numero: vine.string().minLength(1).maxLength(20).trim(),
         complemento: vine.string().minLength(1).maxLength(127).nullable().optional(),
