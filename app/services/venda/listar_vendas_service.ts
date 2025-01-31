@@ -19,20 +19,15 @@ export default class ListarVendasService {
     }
 
     // Filtro por data
-    if (dataInicio && dataFim) {
-      const inicio = DateTime.fromJSDate(dataInicio).startOf('day').toISO() ?? undefined
-      const fim = DateTime.fromJSDate(dataFim).endOf('day').toISO() ?? undefined
+    if (dataInicio || dataFim) {
+      const inicio = dataInicio ? DateTime.fromJSDate(dataInicio).startOf('day').toISO() : undefined
+      const fim = dataFim ? DateTime.fromJSDate(dataFim).endOf('day').toISO() : undefined
+
       if (inicio && fim) {
         query.whereBetween('created_at', [inicio, fim])
-      }
-    } else if (dataInicio) {
-      const inicio = DateTime.fromJSDate(dataInicio).startOf('day').toISO() ?? undefined
-      if (inicio) {
+      } else if (inicio) {
         query.where('created_at', '>=', inicio)
-      }
-    } else if (dataFim) {
-      const fim = DateTime.fromJSDate(dataFim).endOf('day').toISO() ?? undefined
-      if (fim) {
+      } else if (fim) {
         query.where('created_at', '<=', fim)
       }
     }

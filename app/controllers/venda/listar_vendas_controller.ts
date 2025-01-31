@@ -19,7 +19,7 @@ export default class ListarVendasController {
     })
 
     const vendas = await this.listarVendasService.execute({
-      clienteId: payload.clinteId,
+      clienteId: payload.clienteId,
       dataInicio: payload.dataInicio,
       dataFim: payload.dataFim,
       page: payload.page,

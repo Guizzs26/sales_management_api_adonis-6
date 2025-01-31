@@ -24,35 +24,31 @@ async function validaCpf(value: unknown, _: undefined, field: FieldContext) {
     return
   }
 
-  const calcularDigito = (cpf: string, peso: number[]): number => {
-    let soma = 0
-    for (let i = 0; i < 9; i++) {
-      soma += Number.parseInt(cpf.charAt(i)) * peso[i]
-    }
-    const resto = (soma * 10) % 11
-    return resto === 10 || resto === 11 ? 0 : resto
+  // Cálculo do primeiro dígito verificador
+  let soma = 0
+  for (let i = 0; i < 9; i++) {
+    soma += Number.parseInt(value.charAt(i)) * (10 - i)
   }
 
-  // Verificar o primeiro dígito
-  const peso1 = [10, 9, 8, 7, 6, 5, 4, 3, 2]
-  const primeiroDigito = calcularDigito(value, peso1)
-  if (primeiroDigito !== Number.parseInt(value.charAt(9))) {
-    field.report('O CPF {{ field }} é inválido', 'cpf', field)
+  let resto = (soma * 10) % 11
+  if (resto === 10) resto = 0
+
+  if (resto !== Number.parseInt(value.charAt(9))) {
+    field.report('O CPF informado é inválido', 'cpf', field)
     return
   }
 
-  // Verificar o segundo dígito
-  const peso2 = [11, 10, 9, 8, 7, 6, 5, 4, 3, 2]
-  const segundoDigito = calcularDigito(value, peso2)
-  if (segundoDigito !== Number.parseInt(value.charAt(10))) {
-    field.report('O CPF {{ field }} é inválido', 'cpf', field)
-    return
+  // Cálculo do segundo dígito verificador
+  soma = 0
+  for (let i = 0; i < 10; i++) {
+    soma += Number.parseInt(value.charAt(i)) * (11 - i)
   }
+  resto = (soma * 10) % 11
+  if (resto === 10) resto = 0
 
-  return true // CPF válido
+  if (resto !== Number.parseInt(value.charAt(10))) {
+    field.report('O CPF informado é inválido', 'cpf', field)
+  }
 }
 
-/**
- * Regra personalizada para CPF
- */
 export const regraCpf = vine.createRule(validaCpf)

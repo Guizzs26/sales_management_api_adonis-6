@@ -24,35 +24,33 @@ async function validaCnpj(value: unknown, _: undefined, field: FieldContext) {
     return
   }
 
-  const calcularDigito = (cnpj: string, peso: number[]): number => {
-    let soma = 0
-    for (const [i, element] of peso.entries()) {
-      soma += Number.parseInt(cnpj.charAt(i)) * element
-    }
-    const resto = soma % 11
-    return resto < 2 ? 0 : 11 - resto
+  // Cálculo do primeiro dígito verificador
+  let soma = 0
+  for (let i = 0, peso = 5; i < 12; i++, peso--) {
+    if (peso < 2) peso = 9
+    soma += Number.parseInt(value.charAt(i)) * peso
   }
 
-  // Verificar o primeiro dígito
-  const peso1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
-  const primeiroDigito = calcularDigito(value, peso1)
+  let resto = soma % 11
+  const primeiroDigito = resto < 2 ? 0 : 11 - resto
+
   if (primeiroDigito !== Number.parseInt(value.charAt(12))) {
-    field.report('O CNPJ {{ field }} é inválido', 'cnpj', field)
+    field.report('O CNPJ informado é inválido', 'cnpj', field)
     return
   }
 
-  // Verificar o segundo dígito
-  const peso2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
-  const segundoDigito = calcularDigito(value, peso2)
+  // Cálculo do segundo dígito verificador
+  soma = 0
+  for (let i = 0, peso = 6; i < 13; i++, peso--) {
+    if (peso < 2) peso = 9
+    soma += Number.parseInt(value.charAt(i)) * peso
+  }
+  resto = soma % 11
+  const segundoDigito = resto < 2 ? 0 : 11 - resto
+
   if (segundoDigito !== Number.parseInt(value.charAt(13))) {
-    field.report('O CNPJ {{ field }} é inválido', 'cnpj', field)
-    return
+    field.report('O CNPJ informado é inválido', 'cnpj', field)
   }
-
-  return true // CNPJ válido
 }
 
-/**
- * Regra personalizada para CNPJ
- */
 export const regraCnpj = vine.createRule(validaCnpj)

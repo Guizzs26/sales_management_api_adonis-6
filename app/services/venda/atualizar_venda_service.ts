@@ -16,8 +16,10 @@ export default class AtualizarVendaService {
       venda.planoId = planoSelecionado.id
     }
 
-    if (servicos && servicos.length > 0) {
-      const servicosSelecionados = await Servico.query().whereIn('nomeServico', servicos)
+    if (servicos?.length) {
+      const servicosSelecionados = await Servico.query()
+        .select('id')
+        .whereIn('nomeServico', servicos)
 
       // Atribuindo os serviços à venda usando o relacionamento ManyToMany
       await venda.related('servicos').sync(servicosSelecionados.map((servico) => servico.id))

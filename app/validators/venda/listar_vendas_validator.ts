@@ -1,7 +1,7 @@
 import vine from '@vinejs/vine'
 
 export const listarVendasSchema = vine.object({
-  clinteId: vine.string().uuid(),
+  clienteId: vine.string().uuid().optional(),
 
   dataInicio: vine
     .date({
