@@ -1,11 +1,24 @@
 import vine from '@vinejs/vine'
 import { DateTime } from 'luxon'
-import { TipoPessoa } from '../../types/cliente/cliente_type.js'
-import { regraNumeroTelefone } from '../regras/validador_customizado_telefone.js'
+import { TipoPessoa } from '#types/cliente/cliente_type'
+import { regraCpf } from '#regras/validar_cpf'
+import { regraCnpj } from '#regras/validar_cnpj'
+import { regraNumeroTelefone } from '#regras/validar_telefone'
 
 const validarPessoa = vine.group([
   // Validação específica para para PF
   vine.group.if((data) => data.tipo === 'PF', {
+    cpfCnpj: vine
+      .string()
+      .parse((value: unknown) => {
+        if (typeof value === 'string') {
+          return value.replace(/\D/g, '')
+        }
+        return value
+      })
+      .fixedLength(11)
+      .use(regraCpf()),
+
     nomeCompleto: vine
       .string()
       .minLength(2)
@@ -25,6 +38,17 @@ const validarPessoa = vine.group([
   }),
 
   vine.group.if((data) => data.tipo === 'PJ', {
+    cpfCnpj: vine
+      .string()
+      .parse((value: unknown) => {
+        if (typeof value === 'string') {
+          return value.replace(/\D/g, '')
+        }
+        return value
+      })
+      .fixedLength(14)
+      .use(regraCnpj()),
+
     // Validação específica para PJ
     nomeCompleto: vine
       .string()
@@ -89,8 +113,6 @@ export const criarClienteSchema = vine
         siglaUf: vine.string().trim(),
       })
     ),
-
-    cpfCnpj: vine.string(), // Não vai ficar assim, apenas para teste
   })
   .merge(validarPessoa)
 

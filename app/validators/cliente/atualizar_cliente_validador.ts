@@ -1,7 +1,7 @@
 import vine from '@vinejs/vine'
 import { TipoPessoa } from '#types/cliente/cliente_type'
-import { regraNumeroTelefone } from '#validators/regras/validador_customizado_telefone'
-import { nomeCompletoRule } from '#validators/regras/validator_customizado_nome_completo'
+import { nomeCompletoRule } from '#regras/validar_nome_completo'
+import { regraNumeroTelefone } from '#regras/validar_telefone'
 
 export const atualizarClienteValidator = vine.withMetaData<{ tipo: TipoPessoa }>().compile(
   vine.object({
