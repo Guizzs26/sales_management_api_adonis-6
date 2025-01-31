@@ -6,10 +6,8 @@ import RemoverVendaService from '#services/venda/remover_venda_service'
 export default class RemoverVendaController {
   constructor(private removerVendaService: RemoverVendaService) {}
 
-  async handle({ request, response }: HttpContext): Promise<void> {
-    const { id } = request.params()
-
-    await this.removerVendaService.execute(id)
+  async handle({ params, response }: HttpContext): Promise<void> {
+    await this.removerVendaService.execute(params.id)
 
     response.status(204)
   }

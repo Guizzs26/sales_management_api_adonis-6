@@ -6,10 +6,8 @@ import BuscarVendaService from '#services/venda/buscar_venda_service'
 export default class BuscarVendaController {
   constructor(private buscarVendaService: BuscarVendaService) {}
 
-  async handle({ request, response }: HttpContext): Promise<void> {
-    const { id } = request.params()
-
-    const venda = await this.buscarVendaService.execute(id)
+  async handle({ params, response }: HttpContext): Promise<void> {
+    const venda = await this.buscarVendaService.execute(params.id)
 
     response.send(venda)
   }
