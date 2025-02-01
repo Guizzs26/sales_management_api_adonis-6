@@ -6,7 +6,6 @@ export default class PrecoPlanosUfSeeder extends BaseSeeder {
   public static environment = ['development', 'testing']
 
   public async run() {
-    // Busca todos os planos e seus IDs
     const planos = await Plano.query().select('id', 'nomePlano')
 
     // Mapeia os planos para um objeto, onde a chave é o nome do plano e o valor é o id

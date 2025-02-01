@@ -6,7 +6,6 @@ export default class PrecoServicosUfSeeder extends BaseSeeder {
   public static environment = ['development', 'testing']
 
   public async run() {
-    // Obtém os serviços com nome e id
     const servicos = await Servico.query().select('id', 'nomeServico')
 
     const servicoMap = servicos.reduce(
