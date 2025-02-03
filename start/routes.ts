@@ -1,4 +1,6 @@
 import router from '@adonisjs/core/services/router'
+import AutoSwagger from 'adonis-autoswagger'
+import swagger from '#config/swagger'
 
 const CriarClienteController = () => import('#controllers/cliente/criar_cliente_controller')
 const ListarClientesController = () => import('#controllers/cliente/listar_clientes_controller')
@@ -20,7 +22,18 @@ const DashboardController = () => import('#controllers/dashboard/dashboard_contr
 // Matcher global para validar o id do parâmetro de rota
 router.where('id', router.matchers.uuid())
 
+// returns swagger in YAML
+router.get('/swagger', async () => {
+  return AutoSwagger.default.docs(router.toJSON(), swagger)
+})
+
+// Renders Swagger-UI and passes YAML-output of /swagger
+router.get('/docs', async () => {
+  return AutoSwagger.default.ui('/swagger', swagger)
+})
+
 router
+
   .group(() => {
     // Rotas para clientes
     router

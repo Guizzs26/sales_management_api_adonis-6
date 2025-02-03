@@ -60,6 +60,7 @@
     "@adonisjs/cors": "^2.2.1",
     "@adonisjs/lucid": "^21.5.1",
     "@vinejs/vine": "^3.0.0",
+    "adonis-autoswagger": "^3.64.0",
     "axios": "^1.7.9",
     "dayjs": "^1.11.13",
     "luxon": "^3.5.0",
