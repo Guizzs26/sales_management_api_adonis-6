@@ -67,6 +67,12 @@ git clone https://github.com/seuusuario/seu-repositorio.git
 cd seu-repositorio
 ```
 
+### 1.1 Instalar as dependências
+
+```bash
+npm install
+```
+
 ### 2. Usando Docker Compose
 
 #### 2.1 Criar o Arquivo `.env`
@@ -107,9 +113,9 @@ docker-compose up --build -d
 
 Isso irá:
 
-- Construir e iniciar os contêineres necessários para rodar a aplicação e o banco de dados.
+- Construir e iniciar os contêineres necessários para rodar o banco de dados e o pgadmin.
 - O contêiner da aplicação estará disponível em `http://localhost:3333`.
-- O banco de dados PostgreSQL ficará disponível em `localhost:5432`.
+- O banco de dados PostgreSQL ficará disponível em `localhost:5433`.
 
 #### 2.3 Rodar as Migrações e Seeders
 
@@ -148,5 +154,3 @@ node ace test
 A API está documentada usando a biblioteca **adonis-autoswagger**. Para acessar a documentação interativa e testar os endpoints diretamente, visite:
 
 [Documentação da API](http://localhost:3333/swagger)
-
-> > > > > > > b7fe0674ea422c75637e0be65d9e7898f131db20
